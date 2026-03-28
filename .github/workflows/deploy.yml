@@ -57,7 +57,7 @@ jobs:
               server_name facilitorium.denmasterfa.com;
 
               location / {
-                  proxy_pass http://localhost:3000;
+                  proxy_pass http://localhost:3002;
                   proxy_http_version 1.1;
                   proxy_set_header Upgrade \$http_upgrade;
                   proxy_set_header Connection "upgrade";
@@ -67,9 +67,9 @@ jobs:
           }
           EOF'
           
-          # Force this to be the ONLY active site to resolve "Wrong Content" (MTC) issues
-          echo "Enabling Facilitorium and disabling all others..."
-          sudo rm -f /etc/nginx/sites-enabled/*
+          # Enable Facilitorium without breaking other sites
+          echo "Enabling Facilitorium..."
+          sudo rm -f /etc/nginx/sites-enabled/facilitorium
           sudo ln -sf /etc/nginx/sites-available/facilitorium /etc/nginx/sites-enabled/
           
           sudo nginx -t && sudo systemctl restart nginx
