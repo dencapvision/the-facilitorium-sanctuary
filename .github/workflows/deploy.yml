@@ -91,8 +91,8 @@ jobs:
             echo "Requesting new SSL certificate..."
             sudo certbot --nginx -d facilitorium.denmasterfa.com --non-interactive --agree-tos -m denmasterfa.institute@gmail.com --redirect
           else
-            echo "SSL certificate found. Force Injecting into Nginx..."
-            sudo certbot install --nginx -d facilitorium.denmasterfa.com --non-interactive
+            echo "SSL certificate found. Force Injecting into Nginx and redirecting to HTTPS..."
+            sudo certbot install --nginx -d facilitorium.denmasterfa.com --non-interactive --redirect
           fi
           
           echo "Validating Nginx config and Restarting..."
