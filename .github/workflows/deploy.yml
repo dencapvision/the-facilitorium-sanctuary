@@ -40,10 +40,9 @@ jobs:
           npm install
           npm run build
           
-          # 1. Setup Nginx Configuration (only if needed)
-          if [ ! -f /etc/nginx/sites-available/facilitorium ]; then
-            echo "Creating Nginx configuration..."
-            sudo bash -c 'cat > /etc/nginx/sites-available/facilitorium <<EOF
+          # 1. Setup Nginx Configuration
+          echo "Updating Nginx configuration..."
+          sudo bash -c 'cat > /etc/nginx/sites-available/facilitorium <<EOF
           server {
               listen 80;
               server_name facilitorium.denmasterfa.com;
@@ -58,9 +57,13 @@ jobs:
               }
           }
           EOF'
+          
+          # Ensure symlink exists
+          if [ ! -f /etc/nginx/sites-enabled/facilitorium ]; then
             sudo ln -s /etc/nginx/sites-available/facilitorium /etc/nginx/sites-enabled/
-            sudo nginx -t && sudo systemctl reload nginx
           fi
+          
+          sudo nginx -t && sudo systemctl reload nginx
 
           # 2. Setup SSL with Certbot (if not already secured)
           if ! sudo certbot certificates | grep -q "facilitorium.denmasterfa.com"; then
