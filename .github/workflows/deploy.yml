@@ -48,8 +48,23 @@ jobs:
           GEMINI_API_KEY='${{ secrets.GEMINI_API_KEY }}'
           EOF
 
-          # 1. Setup Nginx Configuration (Unified)
-          echo "Updating Nginx configuration..."
+          # 1. Setup Nginx Configuration (Aggressive Conflict Resolution)
+          echo "Resolving Nginx conflicts..."
+          
+          # Find any file in /etc/nginx that might be hijacking our domain
+          CONFLICTS=\$(sudo grep -rl "facilitorium.denmasterfa.com" /etc/nginx/sites-enabled/ /etc/nginx/conf.d/ 2>/dev/null || true)
+          for f in \$CONFLICTS; do
+            if [[ "\$f" != *"/facilitorium"* ]]; then
+              echo "Disabling conflict: \$f"
+              sudo rm -f "\$f"
+            fi
+          done
+
+          # Disable the default site if it exists
+          sudo rm -f /etc/nginx/sites-enabled/default
+          sudo rm -f /etc/nginx/conf.d/default.conf
+
+          echo "Updating Facilitorium Nginx configuration..."
           sudo bash -c 'cat > /etc/nginx/sites-available/facilitorium <<EOF
           server {
               listen 80;
@@ -67,22 +82,26 @@ jobs:
           }
           EOF'
           
-          # Clean all other sites to avoid placeholder conflicts (e.g. from previous runs or default)
-          echo "Cleaning conflicting Nginx configs..."
-          sudo rm -f /etc/nginx/sites-enabled/*
           sudo ln -sf /etc/nginx/sites-available/facilitorium /etc/nginx/sites-enabled/
           
           sudo nginx -t && sudo systemctl restart nginx
 
-          # 2. Setup SSL (handled by certbot --nginx, it will modify the file)
+          # 2. Setup SSL (handled by certbot --nginx)
+          echo "Checking SSL..."
           if ! sudo certbot certificates | grep -q "facilitorium.denmasterfa.com"; then
-            echo "Requesting SSL certificate..."
-            sudo certbot --nginx -d facilitorium.denmasterfa.com --non-interactive --agree-tos -m denmasterfa.institute@gmail.com
-            sudo systemctl restart nginx
+            echo "Requesting new SSL certificate..."
+            sudo certbot --nginx -d facilitorium.denmasterfa.com --non-interactive --agree-tos -m denmasterfa.institute@gmail.com --redirect
+          else
+            echo "SSL certificate exists, ensuring Nginx is configured for it..."
+            # Force certbot to re-install the Nginx config if it was overwritten
+            sudo certbot install --nginx -d facilitorium.denmasterfa.com --non-interactive
           fi
+          
+          sudo systemctl restart nginx
 
           # 3. Restart PM2 Application
           echo "Restarting application with PM2..."
           pm2 delete the-facilitorium || true
-          pm2 start npm --name "the-facilitorium" -- start
+          # Use --update-env to ensure it picks up the new .env
+          pm2 start npm --name "the-facilitorium" -- start -- --port 3000
           pm2 save
