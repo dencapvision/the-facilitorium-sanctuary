@@ -40,17 +40,19 @@ jobs:
           npm install
           npm run build
           
-          # 0. Create Runtime .env File on VPS (Safe Quotes)
+          # 0. Create Runtime .env File on VPS
           echo "Creating .env file for runtime secrets..."
-          cat > .env <<EOF
+          cat > .env << 'EOF'
           NEXT_PUBLIC_SUPABASE_URL='${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}'
           NEXT_PUBLIC_SUPABASE_ANON_KEY='${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}'
           GEMINI_API_KEY='${{ secrets.GEMINI_API_KEY }}'
           EOF
 
-          # 1. Setup Nginx Configuration (Clean Sweep)
-          echo "Configuring Nginx..."
-          sudo bash -c 'cat > /etc/nginx/sites-available/facilitorium <<EOF
+          # 1. Setup Nginx Configuration
+          echo "Checking Nginx configuration..."
+          if [ ! -f /etc/nginx/sites-available/facilitorium ]; then
+            echo "Configuring Nginx for the first time..."
+            sudo tee /etc/nginx/sites-available/facilitorium > /dev/null << 'EOF'
           server {
               listen 80;
               listen [::]:80;
@@ -59,37 +61,39 @@ jobs:
               location / {
                   proxy_pass http://localhost:3002;
                   proxy_http_version 1.1;
-                  proxy_set_header Upgrade \$http_upgrade;
+                  proxy_set_header Upgrade $http_upgrade;
                   proxy_set_header Connection "upgrade";
-                  proxy_set_header Host \$host;
-                  proxy_cache_bypass \$http_upgrade;
+                  proxy_set_header Host $host;
+                  proxy_cache_bypass $http_upgrade;
               }
           }
-          EOF'
-          
-          # Enable Facilitorium without breaking other sites
-          echo "Enabling Facilitorium..."
-          sudo rm -f /etc/nginx/sites-enabled/facilitorium
-          sudo ln -sf /etc/nginx/sites-available/facilitorium /etc/nginx/sites-enabled/
-          
-          sudo nginx -t && sudo systemctl restart nginx
+          EOF
+            
+            echo "Enabling Facilitorium on Nginx..."
+            sudo rm -f /etc/nginx/sites-enabled/facilitorium
+            sudo ln -sf /etc/nginx/sites-available/facilitorium /etc/nginx/sites-enabled/
+            
+            sudo nginx -t && sudo systemctl restart nginx
+          else
+            echo "Nginx configuration already exists. Skipping recreation..."
+          fi
 
           # 2. Setup SSL (handled by certbot --nginx)
           echo "Checking SSL/HTTPS status..."
           if ! sudo certbot certificates | grep -q "facilitorium.denmasterfa.com"; then
             echo "Requesting new SSL certificate..."
             sudo certbot --nginx -d facilitorium.denmasterfa.com --non-interactive --agree-tos -m denmasterfa.institute@gmail.com --redirect
+            sudo systemctl restart nginx
           else
-            echo "SSL exists, forcing Nginx config update..."
-            sudo certbot install --nginx -d facilitorium.denmasterfa.com --non-interactive
+            echo "SSL already exists. No actions required."
           fi
-          
-          sudo systemctl restart nginx
 
           # 3. Restart PM2 Application
           echo "Restarting application with PM2..."
           pm2 delete the-facilitorium || true
-          pm2 start npm --name "the-facilitorium" -- start
+          
+          # Using direct execute to next binary avoids dangling detached npm processes
+          pm2 start "npm run start" --name "the-facilitorium"
           pm2 save
           
           echo "Deployment commands finished successfully."
