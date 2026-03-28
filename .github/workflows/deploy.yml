@@ -36,7 +36,20 @@ jobs:
         port: 22
         script: |
           cd /var/www/the-facilitorium
-          git pull origin main
+
+          # Kill any running old processes that might hold the port or files
+          pm2 delete the-facilitorium || true
+          
+          # Clean Slate: Remove old build caches to prevent any stale Next.js data
+          echo "Cleaning up old build files..."
+          rm -rf node_modules
+          rm -rf .next
+          
+          echo "Pulling latest code (Force Clean)..."
+          git fetch origin
+          git reset --hard origin/main
+          
+          echo "Installing dependencies and building..."
           npm install
           npm run build
           
@@ -48,13 +61,11 @@ jobs:
           GEMINI_API_KEY='${{ secrets.GEMINI_API_KEY }}'
           EOF
 
-          # 1. Setup Nginx Configuration (Force Rebuild to fix routing issue)
-          echo "Configuring Nginx..."
-          # Remove broken configurations
+          # 1. Setup Nginx Configuration (Clean Slate Force Rebuild)
+          echo "Rebuilding Nginx configuration from SCRATCH..."
           sudo rm -f /etc/nginx/sites-available/facilitorium
           sudo rm -f /etc/nginx/sites-enabled/facilitorium
 
-          # Create a fresh, clean HTTP configuration
           sudo tee /etc/nginx/sites-available/facilitorium > /dev/null << 'EOF'
           server {
               listen 80;
@@ -72,28 +83,24 @@ jobs:
           }
           EOF
           
-          # Enable it
           sudo ln -sf /etc/nginx/sites-available/facilitorium /etc/nginx/sites-enabled/
           
           # 2. Setup SSL / Force Injection
-          echo "Scanning for existing certificates..."
+          echo "Scanning for existing SSL certificates..."
           if ! sudo certbot certificates | grep -q "facilitorium.denmasterfa.com"; then
             echo "Requesting new SSL certificate..."
             sudo certbot --nginx -d facilitorium.denmasterfa.com --non-interactive --agree-tos -m denmasterfa.institute@gmail.com --redirect
           else
-            echo "SSL certificate found. Injecting into Nginx..."
+            echo "SSL certificate found. Force Injecting into Nginx..."
             sudo certbot install --nginx -d facilitorium.denmasterfa.com --non-interactive
           fi
           
-          echo "Validating Nginx and Restarting..."
+          echo "Validating Nginx config and Restarting..."
           sudo nginx -t && sudo systemctl restart nginx
 
           # 3. Restart PM2 Application
-          echo "Restarting application with PM2..."
-          pm2 delete the-facilitorium || true
-          
-          # Using direct execute to next binary avoids dangling detached npm processes
+          echo "Starting fresh PM2 application process..."
           pm2 start "npm run start" --name "the-facilitorium"
           pm2 save
           
-          echo "Deployment commands finished successfully."
+          echo "Deployment commands finished successfully (Clean Slate Complete)."
