@@ -85,7 +85,13 @@ jobs:
             sudo certbot --nginx -d facilitorium.denmasterfa.com --non-interactive --agree-tos -m denmasterfa.institute@gmail.com --redirect
             sudo systemctl restart nginx
           else
-            echo "SSL already exists. No actions required."
+            echo "SSL certificate already exists."
+            # Heal Nginx configuration if it was left without SSL by the old script
+            if ! grep -q "listen 443" /etc/nginx/sites-available/facilitorium; then
+              echo "Injecting SSL configuration into Nginx..."
+              sudo certbot install --nginx -d facilitorium.denmasterfa.com --non-interactive
+              sudo systemctl restart nginx
+            fi
           fi
 
           # 3. Restart PM2 Application
