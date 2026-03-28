@@ -55,19 +55,47 @@ jobs:
           
           # 0. Create Runtime .env File on VPS
           echo "Creating .env file for runtime secrets..."
-          cat > .env << 'EOF'
-          NEXT_PUBLIC_SUPABASE_URL='${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}'
-          NEXT_PUBLIC_SUPABASE_ANON_KEY='${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}'
-          GEMINI_API_KEY='${{ secrets.GEMINI_API_KEY }}'
-          EOF
+          echo "NEXT_PUBLIC_SUPABASE_URL='${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}'" > .env
+          echo "NEXT_PUBLIC_SUPABASE_ANON_KEY='${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}'" >> .env
+          echo "GEMINI_API_KEY='${{ secrets.GEMINI_API_KEY }}'" >> .env
 
-          # 1. Setup Nginx Configuration (Clean Slate Force Rebuild)
+          # 1. Setup Nginx Configuration (Force Rebuild with SSL)
           echo "Rebuilding Nginx configuration from SCRATCH..."
           sudo rm -f /etc/nginx/sites-available/facilitorium
           sudo rm -f /etc/nginx/sites-enabled/facilitorium
 
-          sudo tee /etc/nginx/sites-available/facilitorium > /dev/null << 'EOF'
+          CERT_DIR="/etc/letsencrypt/live/facilitorium.denmasterfa.com"
+          if sudo test -d "$CERT_DIR"; then
+            echo "SSL certificate found. Writing FULL HTTPS Configuration..."
+            sudo tee /etc/nginx/sites-available/facilitorium > /dev/null <<< 'server {
+              listen 80;
+              listen [::]:80;
+              server_name facilitorium.denmasterfa.com;
+              return 301 https://$host$request_uri;
+          }
+
           server {
+              listen 443 ssl;
+              listen [::]:443 ssl;
+              server_name facilitorium.denmasterfa.com;
+
+              ssl_certificate /etc/letsencrypt/live/facilitorium.denmasterfa.com/fullchain.pem;
+              ssl_certificate_key /etc/letsencrypt/live/facilitorium.denmasterfa.com/privkey.pem;
+              ssl_protocols TLSv1.2 TLSv1.3;
+              ssl_ciphers HIGH:!aNULL:!MD5;
+
+              location / {
+                  proxy_pass http://localhost:3002;
+                  proxy_http_version 1.1;
+                  proxy_set_header Upgrade $http_upgrade;
+                  proxy_set_header Connection "upgrade";
+                  proxy_set_header Host $host;
+                  proxy_cache_bypass $http_upgrade;
+              }
+          }'
+          else
+            echo "SSL certificate NOT found. Writing HTTP-Only Configuration..."
+            sudo tee /etc/nginx/sites-available/facilitorium > /dev/null <<< 'server {
               listen 80;
               listen [::]:80;
               server_name facilitorium.denmasterfa.com;
@@ -80,19 +108,17 @@ jobs:
                   proxy_set_header Host $host;
                   proxy_cache_bypass $http_upgrade;
               }
-          }
-          EOF
+          }'
+          fi
           
           sudo ln -sf /etc/nginx/sites-available/facilitorium /etc/nginx/sites-enabled/
           
-          # 2. Setup SSL / Force Injection
-          echo "Scanning for existing SSL certificates..."
-          if ! sudo certbot certificates | grep -q "facilitorium.denmasterfa.com"; then
+          # 2. Request SSL only if it doesn't exist
+          if ! sudo test -d "$CERT_DIR"; then
             echo "Requesting new SSL certificate..."
             sudo certbot --nginx -d facilitorium.denmasterfa.com --non-interactive --agree-tos -m denmasterfa.institute@gmail.com --redirect
           else
-            echo "SSL certificate found. Force Injecting into Nginx and redirecting to HTTPS..."
-            sudo certbot install --nginx -d facilitorium.denmasterfa.com --non-interactive --redirect
+            echo "SSL Configuration already injected manually."
           fi
           
           echo "Validating Nginx config and Restarting..."
