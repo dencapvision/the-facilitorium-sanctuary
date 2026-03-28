@@ -40,19 +40,20 @@ jobs:
           npm install
           npm run build
           
-          # 0. Create Runtime .env File on VPS
+          # 0. Create Runtime .env File on VPS (Safe Quotes)
           echo "Creating .env file for runtime secrets..."
-          bash -c 'cat > .env <<EOF
-          NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
-          GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}
-          EOF'
+          cat > .env <<EOF
+          NEXT_PUBLIC_SUPABASE_URL='${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}'
+          NEXT_PUBLIC_SUPABASE_ANON_KEY='${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}'
+          GEMINI_API_KEY='${{ secrets.GEMINI_API_KEY }}'
+          EOF
 
-          # 1. Setup Nginx Configuration
+          # 1. Setup Nginx Configuration (Unified)
           echo "Updating Nginx configuration..."
           sudo bash -c 'cat > /etc/nginx/sites-available/facilitorium <<EOF
           server {
               listen 80;
+              listen [::]:80;
               server_name facilitorium.denmasterfa.com;
 
               location / {
@@ -66,21 +67,22 @@ jobs:
           }
           EOF'
           
-          # Disable default config (prevents conflicts)
-          sudo rm -f /etc/nginx/sites-enabled/default
+          # Clean all other sites to avoid placeholder conflicts (e.g. from previous runs or default)
+          echo "Cleaning conflicting Nginx configs..."
+          sudo rm -f /etc/nginx/sites-enabled/*
+          sudo ln -sf /etc/nginx/sites-available/facilitorium /etc/nginx/sites-enabled/
           
-          # Ensure symlink exists
-          if [ ! -L /etc/nginx/sites-enabled/facilitorium ]; then
-            sudo ln -s /etc/nginx/sites-available/facilitorium /etc/nginx/sites-enabled/
-          fi
-          
-          sudo nginx -t && sudo systemctl reload nginx
+          sudo nginx -t && sudo systemctl restart nginx
 
-          # 2. Setup SSL with Certbot (if not already secured)
+          # 2. Setup SSL (handled by certbot --nginx, it will modify the file)
           if ! sudo certbot certificates | grep -q "facilitorium.denmasterfa.com"; then
-            echo "Installing SSL certificate..."
-            sudo certbot --nginx -d facilitorium.denmasterfa.com --non-interactive --agree-tos -m your_email@example.com
+            echo "Requesting SSL certificate..."
+            sudo certbot --nginx -d facilitorium.denmasterfa.com --non-interactive --agree-tos -m denmasterfa.institute@gmail.com
+            sudo systemctl restart nginx
           fi
 
           # 3. Restart PM2 Application
-          pm2 restart the-facilitorium || pm2 start npm --name "the-facilitorium" -- start
+          echo "Restarting application with PM2..."
+          pm2 delete the-facilitorium || true
+          pm2 start npm --name "the-facilitorium" -- start
+          pm2 save
