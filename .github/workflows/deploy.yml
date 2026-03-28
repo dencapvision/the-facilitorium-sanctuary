@@ -40,6 +40,14 @@ jobs:
           npm install
           npm run build
           
+          # 0. Create Runtime .env File on VPS
+          echo "Creating .env file for runtime secrets..."
+          bash -c 'cat > .env <<EOF
+          NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}
+          EOF'
+
           # 1. Setup Nginx Configuration
           echo "Updating Nginx configuration..."
           sudo bash -c 'cat > /etc/nginx/sites-available/facilitorium <<EOF
@@ -58,8 +66,11 @@ jobs:
           }
           EOF'
           
+          # Disable default config (prevents conflicts)
+          sudo rm -f /etc/nginx/sites-enabled/default
+          
           # Ensure symlink exists
-          if [ ! -f /etc/nginx/sites-enabled/facilitorium ]; then
+          if [ ! -L /etc/nginx/sites-enabled/facilitorium ]; then
             sudo ln -s /etc/nginx/sites-available/facilitorium /etc/nginx/sites-enabled/
           fi
           
