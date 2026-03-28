@@ -48,11 +48,14 @@ jobs:
           GEMINI_API_KEY='${{ secrets.GEMINI_API_KEY }}'
           EOF
 
-          # 1. Setup Nginx Configuration
-          echo "Checking Nginx configuration..."
-          if [ ! -f /etc/nginx/sites-available/facilitorium ]; then
-            echo "Configuring Nginx for the first time..."
-            sudo tee /etc/nginx/sites-available/facilitorium > /dev/null << 'EOF'
+          # 1. Setup Nginx Configuration (Force Rebuild to fix routing issue)
+          echo "Configuring Nginx..."
+          # Remove broken configurations
+          sudo rm -f /etc/nginx/sites-available/facilitorium
+          sudo rm -f /etc/nginx/sites-enabled/facilitorium
+
+          # Create a fresh, clean HTTP configuration
+          sudo tee /etc/nginx/sites-available/facilitorium > /dev/null << 'EOF'
           server {
               listen 80;
               listen [::]:80;
@@ -68,31 +71,22 @@ jobs:
               }
           }
           EOF
-            
-            echo "Enabling Facilitorium on Nginx..."
-            sudo rm -f /etc/nginx/sites-enabled/facilitorium
-            sudo ln -sf /etc/nginx/sites-available/facilitorium /etc/nginx/sites-enabled/
-            
-            sudo nginx -t && sudo systemctl restart nginx
-          else
-            echo "Nginx configuration already exists. Skipping recreation..."
-          fi
-
-          # 2. Setup SSL (handled by certbot --nginx)
-          echo "Checking SSL/HTTPS status..."
+          
+          # Enable it
+          sudo ln -sf /etc/nginx/sites-available/facilitorium /etc/nginx/sites-enabled/
+          
+          # 2. Setup SSL / Force Injection
+          echo "Scanning for existing certificates..."
           if ! sudo certbot certificates | grep -q "facilitorium.denmasterfa.com"; then
             echo "Requesting new SSL certificate..."
             sudo certbot --nginx -d facilitorium.denmasterfa.com --non-interactive --agree-tos -m denmasterfa.institute@gmail.com --redirect
-            sudo systemctl restart nginx
           else
-            echo "SSL certificate already exists."
-            # Heal Nginx configuration if it was left without SSL by the old script
-            if ! grep -q "listen 443" /etc/nginx/sites-available/facilitorium; then
-              echo "Injecting SSL configuration into Nginx..."
-              sudo certbot install --nginx -d facilitorium.denmasterfa.com --non-interactive
-              sudo systemctl restart nginx
-            fi
+            echo "SSL certificate found. Injecting into Nginx..."
+            sudo certbot install --nginx -d facilitorium.denmasterfa.com --non-interactive
           fi
+          
+          echo "Validating Nginx and Restarting..."
+          sudo nginx -t && sudo systemctl restart nginx
 
           # 3. Restart PM2 Application
           echo "Restarting application with PM2..."
