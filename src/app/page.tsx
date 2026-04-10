@@ -3,10 +3,15 @@ import { Navbar } from '@/components/layout/Navbar';
 import { FacilitatorChat } from '@/components/ai/FacilitatorChat';
 import { PremiumCard } from '@/components/ui/PremiumCard';
 import { Play, BookOpen, PenTool, Users, Sparkles, Globe, ShieldCheck, Zap } from 'lucide-react';
+import Link from 'next/link';
+
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-[#F8F9FA]">
+    <main className="min-h-screen bg-[#FDFDFD] relative overflow-hidden font-sans selection:bg-gold/30">
+      {/* Background Texture Overlay */}
+      <div className="fixed inset-0 sanctuary-grain z-0 opacity-[0.03] pointer-events-none"></div>
+      
       <Navbar />
       
       {/* Hero Content Area */}
@@ -14,31 +19,46 @@ export default function Home() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           
           {/* Main Left Content */}
-          <div className="lg:col-span-8 space-y-12">
+          <div className="lg:col-span-8 space-y-16 relative z-10">
             
             {/* Elegant Hero Header & Banner */}
-            <section className="space-y-6 animate-fade-in">
-              <div className="relative w-full h-64 rounded-3xl overflow-hidden shadow-2xl mb-8">
+            <section className="space-y-8 animate-fade-in text-center lg:text-left">
+              <div className="group relative w-full h-[400px] rounded-[2.5rem] overflow-hidden shadow-premium mb-10 border-4 border-white">
                 <img 
-                  src="/images/banner.png" 
+                  src="https://nheppvjayzxlblkeanxs.supabase.co/storage/v1/object/public/The%20Facilitorium/Bradner%20The%20facilitorium.png" 
                   alt="The Facilitorium Banner" 
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-royal-blue/60 to-transparent"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-royal-blue/80 via-royal-blue/20 to-transparent"></div>
+                <div className="absolute bottom-10 left-10 right-10 flex flex-col items-start lg:items-start text-white">
+                  <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gold/20 backdrop-blur-md border border-gold/30 text-gold text-[10px] font-bold tracking-[0.2em] uppercase mb-4">
+                    <Sparkles size={14} />
+                    Established 2024
+                  </div>
+                  <h1 className="text-4xl md:text-6xl font-serif font-bold leading-tight">
+                    The <span className="text-gold">Facilitorium</span> Sanctuary
+                  </h1>
+                </div>
               </div>
 
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gold/10 border border-gold/20 text-gold text-xs font-bold tracking-widest uppercase">
-                <Sparkles size={12} />
-                The Sanctuary for Change-Makers
+              <div className="space-y-6">
+                <h2 className="text-4xl md:text-6xl font-serif font-bold text-royal-blue leading-[1.1]">
+                  ปลุกพลังวิทยากร <br />
+                  <span className="gold-text-gradient">ผู้สร้างการเปลี่ยนแปลง</span>
+                </h2>
+                <p className="text-xl text-royal-blue/60 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-light">
+                  พื้นที่ศักดิ์สิทธิ์สำหรับการบ่มเพาะวิทยากรผู้สร้างผลกระทบ <br className="hidden md:block" />
+                  รวมฐานความรู้และเครื่องมือระดับสากลไว้ในที่เดียว
+                </p>
+                <div className="flex flex-wrap gap-4 pt-4 justify-center lg:justify-start">
+                  <Link href="/lms" className="px-8 py-4 bg-royal-blue text-gold font-bold rounded-2xl shadow-xl hover:shadow-royal-blue/20 transition-all hover:-translate-y-1">
+                    เริ่มการเดินทาง
+                  </Link>
+                  <button className="px-8 py-4 bg-white border border-royal-blue/10 text-royal-blue font-bold rounded-2xl hover:bg-royal-blue/5 transition-all">
+                    เรียนรู้เพิ่มเติม
+                  </button>
+                </div>
               </div>
-              <h1 className="text-5xl md:text-6xl font-serif font-bold text-royal-blue leading-tight">
-                ปลุกพลังวิทยากร <br />
-                <span className="gold-text-gradient">ผู้สร้างการเปลี่ยนแปลง</span>
-              </h1>
-              <p className="text-lg text-royal-blue/70 max-w-2xl leading-relaxed">
-                ยินดีต้อนรับสู่ The Facilitorium พื้นที่แห่งการเรียนรู้ที่รวมทั้งคลังความรู้ เครื่องมือ และคอมมูนิตี้ 
-                เพื่อฝึกฝนกระบวนยุทธ์สู่การเป็นสุดยอดวิทยากรที่สร้าง Impact ให้กับสังคม
-              </p>
             </section>
 
             {/* Platform Narrative / About */}
@@ -80,39 +100,50 @@ export default function Home() {
             </section>
 
             {/* Free Exploration Section (USER REQUEST) */}
-            <section className="space-y-8">
-               <div className="flex items-center justify-between border-b border-royal-blue/10 pb-4">
-                 <h2 className="text-3xl font-serif font-bold text-royal-blue">สัมผัสประสบการณ์ฟรี (Free Exploration)</h2>
-                 <button className="text-gold font-bold text-sm hover:underline">ดูทั้งหมด</button>
+            <section className="space-y-10">
+               <div className="flex items-end justify-between border-b border-royal-blue/5 pb-6">
+                 <div>
+                   <h2 className="text-4xl font-serif font-bold text-royal-blue">สัมผัสประสบการณ์ฟรี</h2>
+                   <p className="text-royal-blue/40 mt-2">สำรวจคลังความรู้พื้นฐานและเครื่องมือช่วยสอนเบื้องต้น</p>
+                 </div>
+                 <button className="text-gold font-bold text-sm flex items-center gap-2 hover:gap-3 transition-all">
+                   ดูทั้งหมด <Zap size={16} />
+                 </button>
                </div>
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+               
+               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 bento-grid-custom">
+                  <Link href="/lms" className="md:col-span-2 group">
+                    <div className="relative overflow-hidden rounded-[2rem] bg-royal-blue p-10 text-white min-h-[300px] flex flex-col justify-end shadow-premium hover:-translate-y-2 transition-all duration-500">
+                      <div className="absolute top-0 right-0 w-80 h-80 bg-gold/10 blur-[100px] -mr-20 -mt-20 group-hover:bg-gold/20 transition-colors"></div>
+                      <div className="relative z-10 max-w-lg space-y-4">
+                        <span className="px-4 py-1.5 bg-gold/20 backdrop-blur-md rounded-full text-gold text-[10px] font-bold tracking-widest uppercase">Featured Content</span>
+                        <h3 className="text-4xl font-serif font-bold">Facilitation Quick Starts</h3>
+                        <p className="text-white/70 leading-relaxed text-lg">
+                          5 เทคนิคลับการเปิดวงคุยเพื่อสร้างความไว้เนื้อเชื่อใจ (Safety) ในห้องเรียนยุคใหม่ 
+                          ที่วิทยากรมืออาชีพเลือกใช้เพื่อให้ผู้เรียนเปิดใจตั้งแต่นาทีแรก
+                        </p>
+                        <div className="pt-4 flex items-center gap-3 text-gold font-bold">
+                          เริ่มเรียนเลย <Play size={20} fill="currentColor" />
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                  
                   <PremiumCard 
-                    title="Facilitation Quick Starts"
-                    tag="FREE PREVIEW"
-                    isFree={true}
-                    description="5 เทคนิคลับการเปิดวงคุยเพื่อสร้างความไว้เนื้อเชื่อใจ (Safety) ในห้องเรียนยุคใหม่"
-                    icon={<Play size={24} />}
-                  />
-                  <PremiumCard 
-                    title="AI Session Designer (v.1)"
+                    title="AI Session Designer"
                     tag="FREE TOOL"
                     isFree={true}
                     description="ทดลองใช้งาน AI ช่วยร่างโครงสร้างหลักสูตรสั้นๆ ภายใน 3 นาที"
                     icon={<Zap size={24} />}
+                    className="h-full"
                   />
                   <PremiumCard 
-                    title="Knowledge Base Snippet"
-                    tag="FREE INSIGHT"
+                    title="Community Access"
+                    tag="FREE GUEST"
                     isFree={true}
-                    description="สรุปหัวใจสำคัญของ 10 พฤติกรรมที่วิทยากรมือโปรต้องมี"
-                    icon={<BookOpen size={24} />}
-                  />
-                  <PremiumCard 
-                    title="Community Guest Room"
-                    tag="FREE ACCESS"
-                    isFree={true}
-                    description="เข้ามาร่วมรับชมกระทู้ยอดนิยมและพูดคุยในฐานะผู้มาเยือน"
+                    description="เข้ามาร่วมรับชมกระทู้ยอดนิยมและพูดคุยในฐานะผู้มาเยือน Sanctuary"
                     icon={<Users size={24} />}
+                    className="h-full"
                   />
                </div>
             </section>
@@ -123,43 +154,46 @@ export default function Home() {
              <div className="sticky top-24 space-y-6">
                 
                 {/* Main Join Card */}
-                <div className="bg-white rounded-3xl shadow-xl border border-royal-blue/5 overflow-hidden">
-                   <div className="h-48 bg-royal-blue relative shimmer-effect">
-                      <div className="absolute inset-0 flex items-center justify-center">
-                         <Globe className="text-gold/20" size={120} />
+                <div className="bg-white rounded-[2.5rem] shadow-premium border border-royal-blue/5 overflow-hidden group">
+                   <div className="h-56 bg-royal-blue relative overflow-hidden">
+                      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/natural-paper.png')] opacity-20 multiply"></div>
+                      <div className="absolute inset-0 flex items-center justify-center group-hover:scale-110 transition-transform duration-700">
+                         <Globe className="text-gold/10" size={160} />
                       </div>
-                      <div className="absolute bottom-4 left-4">
-                         <h4 className="text-gold font-serif font-bold bg-royal-blue/60 backdrop-blur-md px-3 py-1 rounded-lg">Official Platform</h4>
+                      <div className="absolute bottom-6 left-6">
+                         <h4 className="text-gold font-serif font-bold bg-royal-blue/40 backdrop-blur-xl border border-gold/20 px-4 py-2 rounded-2xl text-sm">
+                           Elite Community
+                         </h4>
                       </div>
                    </div>
-                   <div className="p-6 space-y-6">
-                      <div className="space-y-2">
-                         <h3 className="text-2xl font-serif font-bold text-royal-blue">The Facilitorium Skool</h3>
-                         <p className="text-sm text-royal-blue/60">skool.com/the-facilitorium</p>
+                   <div className="p-8 space-y-8">
+                      <div className="space-y-3">
+                         <h3 className="text-3xl font-serif font-bold text-royal-blue leading-tight">The Sanctum Member</h3>
+                         <p className="text-sm text-royal-blue/40 font-medium tracking-wide">SKOOL.COM/THE-FACILITORIUM</p>
                       </div>
-                      <p className="text-sm leading-relaxed text-royal-blue/80">
-                         ปลดล็อกทุกกระบวนยุทธ์ เข้าถึงคลังเครื่องมือทั้งหมด และร่วมชุมชนวิทยากรผู้สร้างการเปลี่ยนแปลง
+                      <p className="text-md leading-relaxed text-royal-blue/70 font-light">
+                        ร่วมเป็นส่วนหนึ่งของสถาบันที่รวบรวมวิทยากรแถวหน้าของประเทศไทย เพื่อยกระดับทักษะและการเรียนรู้ร่วมกัน
                       </p>
-                      <div className="flex justify-between items-center py-4 border-y border-royal-blue/5">
-                         <div className="text-center">
-                            <p className="text-xl font-bold text-royal-blue">1.2k</p>
-                            <p className="text-[10px] text-royal-blue/40 font-bold uppercase tracking-wider">Members</p>
+                      <div className="flex justify-between items-center py-6 border-y border-royal-blue/5">
+                         <div className="text-left">
+                            <p className="text-2xl font-serif font-bold text-royal-blue">1.2k+</p>
+                            <p className="text-[10px] text-gold font-bold uppercase tracking-wider">Followers</p>
                          </div>
-                         <div className="text-center">
-                            <p className="text-xl font-bold text-green-500">12</p>
-                            <p className="text-[10px] text-royal-blue/40 font-bold uppercase tracking-wider">Online</p>
-                         </div>
-                         <div className="text-center">
-                            <p className="text-xl font-bold text-royal-blue">4</p>
-                            <p className="text-[10px] text-royal-blue/40 font-bold uppercase tracking-wider">Admins</p>
+                         <div className="h-8 w-[1px] bg-royal-blue/5"></div>
+                         <div className="text-left">
+                            <p className="text-2xl font-serif font-bold text-green-500">Active</p>
+                            <p className="text-[10px] text-royal-blue/40 font-bold uppercase tracking-wider">Community</p>
                          </div>
                       </div>
-                      <button className="w-full py-4 bg-royal-blue text-gold font-bold rounded-2xl shadow-lg shadow-royal-blue/20 hover:bg-royal-blue-light transition-all active:scale-95 text-lg">
-                         Join Waitlist
+                      <button className="w-full py-5 bg-royal-blue text-gold font-bold rounded-[1.5rem] shadow-premium hover:shadow-royal-blue/30 transition-all hover:-translate-y-1 text-lg">
+                         Apply for Sanctuary Access
                       </button>
-                      <p className="text-[10px] text-center text-royal-blue/40">
-                         * สมาชิกใหม่ต้องผ่านการคัดเลือกหรือชำระค่าบริการรายเดือน
-                      </p>
+                      <div className="flex items-center justify-center gap-2">
+                        <ShieldCheck size={14} className="text-gold" />
+                        <p className="text-[10px] text-royal-blue/40 font-medium italic">
+                          Exclusive for Certified Facilitators
+                        </p>
+                      </div>
                    </div>
                 </div>
 

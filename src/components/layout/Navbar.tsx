@@ -1,60 +1,55 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Home, Users, BookOpen, PenTool, Calendar, ShieldCheck } from 'lucide-react';
+import Link from 'next/link';
+import { Sparkles, Users, BookOpen, PenTool, Globe, ShieldCheck } from 'lucide-react';
 
 export const Navbar = () => {
-  const [activeTab, setActiveTab] = useState('About');
-
-  const tabs = [
-    { name: 'Community', icon: <Users size={18} /> },
-    { name: 'Classroom', icon: <BookOpen size={18} /> },
-    { name: 'Tools', icon: <PenTool size={18} /> },
-    { name: 'Calendar', icon: <Calendar size={18} /> },
-    { name: 'Members', icon: <Users size={18} /> },
-    { name: 'About', icon: <ShieldCheck size={18} /> },
-  ];
-
   return (
-    <nav className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b border-royal-blue/10">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo Section */}
-          <div className="flex items-center gap-3">
+    <nav className="sticky top-0 z-[100] w-full flex justify-center py-6 px-4">
+      <div className="max-w-7xl w-full glass-morphism rounded-[2rem] px-8 py-4 flex items-center justify-between border border-white/40 shadow-premium">
+        {/* Brand Logo & Name */}
+        <Link href="/" className="flex items-center gap-4 group">
+          <div className="relative h-10 w-10 overflow-hidden rounded-xl bg-white p-1.5 shadow-sm border border-royal-blue/5">
             <img 
-              src="/images/logo.png" 
-              alt="The Facilitorium Logo" 
-              className="h-10 w-auto object-contain"
+              src="https://nheppvjayzxlblkeanxs.supabase.co/storage/v1/object/public/The%20Facilitorium/Logo%20The%20Facilitorium.png" 
+              alt="Logo" 
+              className="h-full w-full object-contain"
             />
           </div>
+          <span className="text-xl font-serif font-bold text-royal-blue tracking-tight group-hover:text-gold transition-colors block">
+            THE <span className="text-gold">FACILITORIUM</span>
+          </span>
+        </Link>
+        
+        {/* Dynamic Navigation Tabs */}
+        <div className="hidden lg:flex items-center gap-10">
+          <Link href="/" className="text-sm font-bold text-royal-blue flex flex-col items-center group transition-all">
+            <span className="group-hover:text-gold transition-colors">Exploration</span>
+            <div className="h-1 w-1 bg-gold rounded-full scale-0 group-hover:scale-100 transition-all mt-1"></div>
+          </Link>
+          <Link href="/lms" className="text-sm font-bold text-royal-blue/40 flex flex-col items-center group transition-all">
+            <span className="group-hover:text-royal-blue transition-colors">Academy</span>
+            <div className="h-1 w-1 bg-gold rounded-full scale-0 group-hover:scale-100 transition-all mt-1"></div>
+          </Link>
+          <Link href="/community" className="text-sm font-bold text-royal-blue/40 flex flex-col items-center group transition-all">
+            <span className="group-hover:text-royal-blue transition-colors">Community</span>
+            <div className="h-1 w-1 bg-gold rounded-full scale-0 group-hover:scale-100 transition-all mt-1"></div>
+          </Link>
+          <Link href="/tools" className="text-sm font-bold text-royal-blue/40 flex flex-col items-center group transition-all">
+            <span className="group-hover:text-royal-blue transition-colors">Tools</span>
+            <div className="h-1 w-1 bg-gold rounded-full scale-0 group-hover:scale-100 transition-all mt-1"></div>
+          </Link>
+        </div>
 
-          {/* Navigation Tabs */}
-          <div className="hidden md:flex items-center gap-1 overflow-x-auto no-scrollbar">
-            {tabs.map((tab) => (
-              <button
-                key={tab.name}
-                onClick={() => setActiveTab(tab.name)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                  activeTab === tab.name
-                    ? 'bg-royal-blue text-white shadow-lg shadow-royal-blue/20'
-                    : 'text-royal-blue/60 hover:text-royal-blue hover:bg-royal-blue/5'
-                }`}
-              >
-                {tab.icon}
-                {tab.name}
-              </button>
-            ))}
-          </div>
-
-          {/* User Section (Guest/Login) */}
-          <div className="flex items-center gap-3">
-             <button className="text-sm font-medium text-royal-blue/80 hover:text-royal-blue transition-colors">
-               Log In
-             </button>
-             <button className="px-4 py-2 bg-royal-blue text-gold font-bold text-sm rounded-lg hover:bg-royal-blue-light transition-all shadow-md active:scale-95">
-               Join Waitlist
-             </button>
-          </div>
+        {/* User Actions */}
+        <div className="flex items-center gap-6">
+          <button className="hidden sm:block text-sm font-bold text-royal-blue/40 hover:text-royal-blue transition-all">
+            Sign In
+          </button>
+          <button className="px-6 py-2.5 bg-royal-blue text-gold font-bold rounded-xl shadow-premium hover:shadow-royal-blue/20 transition-all hover:scale-105 active:scale-95 text-xs tracking-widest uppercase border border-gold/10">
+            Join Sanctuary
+          </button>
         </div>
       </div>
     </nav>
