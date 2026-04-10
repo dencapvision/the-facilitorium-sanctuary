@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useEffect, useState } from 'react';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
@@ -223,11 +225,6 @@ export default function DashboardPage() {
                     <p className="text-xs text-charcoal/30 font-sans italic">No recent activity yet.</p>
                   )}
                 </div>
-                <button className="w-full mt-6 text-xs text-gold font-sans font-bold flex items-center justify-center gap-2 hover:gap-3 transition-all uppercase tracking-widest">
-                  View Full Logs <ChevronRight className="w-3 h-3" />
-                </button>
-              </div>
-            </div>
                 <button className="w-full mt-6 text-xs text-gold font-sans font-bold flex items-center justify-center gap-2 hover:gap-3 transition-all uppercase tracking-widest">
                   View Full Logs <ChevronRight className="w-3 h-3" />
                 </button>

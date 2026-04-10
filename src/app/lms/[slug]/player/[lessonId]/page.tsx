@@ -18,7 +18,9 @@ import {
     GraduationCap,
     Lock,
     CheckCircle2,
-    PenTool
+    PenTool,
+    Sparkles,
+    ShieldCheck
 } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -26,7 +28,7 @@ import { notFound } from 'next/navigation';
 export default function LMSPlayer({ params }: { params: Promise<{ slug: string, lessonId: string }> }) {
   const { slug, lessonId } = React.use(params);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [activeTab, setActiveTab] = useState<'overview' | 'resources' | 'notes'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'resources' | 'notes' | 'ai-coach'>('overview');
   const [note, setNote] = useState('');
 
   const course = COURSES.find(c => c.slug === slug);
