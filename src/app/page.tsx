@@ -8,7 +8,7 @@ import Link from 'next/link';
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-[#FDFDFD] relative overflow-hidden font-sans selection:bg-gold/30">
+    <main className="min-h-screen bg-[#FDFDFD] relative overflow-hidden selection:bg-gold/30">
       {/* Background Texture Overlay */}
       <div className="fixed inset-0 sanctuary-grain z-0 opacity-[0.03] pointer-events-none"></div>
       
@@ -168,7 +168,7 @@ export default function Home() {
                    </div>
                    <div className="p-8 space-y-8">
                       <div className="space-y-3">
-                         <h3 className="text-3xl font-serif font-bold text-royal-blue leading-tight">The Sanctum Member</h3>
+                         <h3 className="text-3xl font-serif font-bold text-royal-blue leading-tight">โรงเรียนวิทยากร The FACILITORIUM</h3>
                          <p className="text-sm text-royal-blue/40 font-medium tracking-wide">SKOOL.COM/THE-FACILITORIUM</p>
                       </div>
                       <p className="text-md leading-relaxed text-royal-blue/70 font-light">

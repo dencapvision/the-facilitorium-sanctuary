@@ -1,16 +1,16 @@
-import type { Metadata } from "next";
-import { Inter, Cormorant_Garamond } from "next/font/google";
+import { Prompt, Sarabun } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-sans",
+const prompt = Prompt({
+  subsets: ["latin", "thai"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-heading",
 });
 
-const cormorantGaramond = Cormorant_Garamond({
-  subsets: ["latin"],
-  weight: ["400", "600", "700"],
-  variable: "--font-serif",
+const sarabun = Sarabun({
+  subsets: ["latin", "thai"],
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-body",
 });
 
 export const metadata: Metadata = {
@@ -24,7 +24,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="th" className={`${inter.variable} ${cormorantGaramond.variable}`}>
+    <html lang="th" className={`${prompt.variable} ${sarabun.variable}`}>
       <body className="antialiased selection:bg-gold selection:text-white">
         {children}
       </body>
