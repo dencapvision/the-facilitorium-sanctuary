@@ -169,7 +169,7 @@ export default function Home() {
                    <div className="p-8 space-y-8">
                       <div className="space-y-3">
                          <h3 className="text-3xl font-serif font-bold text-royal-blue leading-tight">โรงเรียนวิทยากร The FACILITORIUM</h3>
-                         <p className="text-sm text-royal-blue/40 font-medium tracking-wide">SKOOL.COM/THE-FACILITORIUM</p>
+                         <p className="text-sm text-royal-blue/40 font-medium tracking-wide">By Den Masterfa</p>
                       </div>
                       <p className="text-md leading-relaxed text-royal-blue/70 font-light">
                         ร่วมเป็นส่วนหนึ่งของสถาบันที่รวบรวมวิทยากรแถวหน้าของประเทศไทย เพื่อยกระดับทักษะและการเรียนรู้ร่วมกัน
