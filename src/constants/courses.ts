@@ -57,7 +57,7 @@ export const COURSES: Course[] = [
         lessons: [
           { id: 'l1', title: 'บทนำ: Facilitator คือใครในโลกยุคใหม่?', duration: '12:00', type: 'video', videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ' },
           { id: 'l2', title: 'ความลับของ Cognitive Safety', duration: '15:20', type: 'video' },
-          { id: 'l3', title: 'การเตรียมตัวก่อนเข้า 'Sanctuary'', duration: '08:45', type: 'article' },
+          { id: 'l3', title: "การเตรียมตัวก่อนเข้า 'Sanctuary'", duration: '08:45', type: 'article' },
         ]
       },
       {
