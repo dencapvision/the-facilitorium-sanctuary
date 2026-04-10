@@ -17,8 +17,9 @@ export const Navbar = () => {
               className="h-full w-full object-contain"
             />
           </div>
-          <span className="text-xl font-serif font-bold text-royal-blue tracking-tight group-hover:text-gold transition-colors block">
+          <span className="text-xl font-serif font-bold text-royal-blue tracking-tight group-hover:text-gold transition-colors block leading-tight">
             THE <span className="text-gold">FACILITORIUM</span>
+            <span className="block text-[10px] font-sans font-extrabold text-gold tracking-[0.3em] uppercase opacity-70">FA-OS System</span>
           </span>
         </Link>
         

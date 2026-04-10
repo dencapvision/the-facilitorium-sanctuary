@@ -36,7 +36,8 @@ export default function Home() {
                     Established 2024
                   </div>
                   <h1 className="text-4xl md:text-6xl font-serif font-bold leading-tight">
-                    The <span className="text-gold">Facilitorium</span> Sanctuary
+                    The <span className="text-gold">Facilitorium</span> <br />
+                    <span className="text-[0.4em] tracking-[0.4em] uppercase font-sans text-gold/60 block mt-2">Facilitation Operating System</span>
                   </h1>
                 </div>
               </div>
@@ -51,8 +52,8 @@ export default function Home() {
                   รวมฐานความรู้และเครื่องมือระดับสากลไว้ในที่เดียว
                 </p>
                 <div className="flex flex-wrap gap-4 pt-4 justify-center lg:justify-start">
-                  <Link href="/lms" className="px-8 py-4 bg-royal-blue text-gold font-bold rounded-2xl shadow-xl hover:shadow-royal-blue/20 transition-all hover:-translate-y-1">
-                    เริ่มการเดินทาง
+                  <Link href="/join" className="px-8 py-4 bg-royal-blue text-gold font-bold rounded-2xl shadow-xl hover:shadow-royal-blue/20 transition-all hover:-translate-y-1">
+                    สมัครเข้าสู่ระบบ FA-OS
                   </Link>
                   <button className="px-8 py-4 bg-white border border-royal-blue/10 text-royal-blue font-bold rounded-2xl hover:bg-royal-blue/5 transition-all">
                     เรียนรู้เพิ่มเติม

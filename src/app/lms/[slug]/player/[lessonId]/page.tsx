@@ -124,9 +124,10 @@ export default function LMSPlayer({ params }: { params: Promise<{ slug: string, 
              <div className="max-w-4xl mx-auto p-6 md:p-12">
                 <div className="flex gap-8 border-b border-white/10 mb-8 overflow-x-auto scrollbar-hide">
                     {[
-                        { id: 'overview', label: 'Lesson Overview' },
-                        { id: 'resources', label: 'Resources & Tools' },
-                        { id: 'notes', label: 'The Sanctuary Notes' },
+                        { id: 'overview', label: 'Overview' },
+                        { id: 'resources', label: 'Resources' },
+                        { id: 'notes', label: 'Notes' },
+                        { id: 'ai-coach', label: 'Wise Brother AI' },
                     ].map(tab => (
                         <button 
                             key={tab.id}
@@ -199,6 +200,51 @@ export default function LMSPlayer({ params }: { params: Promise<{ slug: string, 
                             <div className="flex items-center gap-4 pt-4 text-white/20 text-[10px] font-medium italic">
                                 <PenTool size={12} />
                                 Your notes are encrypted and private to you in the Sanctuary.
+                            </div>
+                        </div>
+                    )}
+
+                    {activeTab === 'ai-coach' && (
+                        <div className="bg-white/5 border border-white/10 rounded-[2rem] overflow-hidden flex flex-col h-[500px]">
+                            <div className="p-6 border-b border-white/10 bg-white/5 flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 bg-gold rounded-full flex items-center justify-center text-royal-blue shadow-lg shadow-gold/20">
+                                        <Sparkles size={20} />
+                                    </div>
+                                    <div>
+                                        <p className="text-sm font-bold text-white">Wise Brother AI</p>
+                                        <p className="text-[10px] text-gold uppercase tracking-widest font-black">Online • Your Companion</p>
+                                    </div>
+                                </div>
+                                <ShieldCheck size={20} className="text-white/20" />
+                            </div>
+
+                            <div className="flex-1 p-6 overflow-y-auto space-y-6 custom-scrollbar">
+                                <div className="flex gap-4 max-w-[80%]">
+                                    <div className="w-8 h-8 bg-gold/20 rounded-full shrink-0 flex items-center justify-center text-gold border border-gold/20">
+                                        พี่
+                                    </div>
+                                    <div className="bg-white/5 border border-white/10 p-4 rounded-2xl rounded-tl-none">
+                                        <p className="text-sm leading-relaxed text-white/90">
+                                            สวัสดีครับน้อง... พี่ดีใจเหลือเกินที่คุณเลือกมาเติบโตด้วยกันในพื้นที่นี้ 
+                                            จากบทเรียนเมื่อครู่ พี่อยากชวนสะท้อนนิดนึงว่า "อะไรคือสิ่งที่คุณรู้สึกว่ายากที่สุดในการสร้าง Safety ให้กับกลุ่ม?" 
+                                            เล่าให้พี่ฟังได้เลยนะ พี่พร้อมฟังและประคองการเรียนรู้นี้ไปกับคุณครับ
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="p-4 bg-white/5 border-t border-white/10">
+                                <div className="relative">
+                                    <input 
+                                        type="text" 
+                                        placeholder="พิมพ์ข้อความคุยกับพี่ชาย..."
+                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-4 text-white pr-12 focus:outline-none focus:border-gold transition-all"
+                                    />
+                                    <button className="absolute right-4 top-1/2 -translate-y-1/2 text-gold">
+                                        <ChevronRight />
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     )}
