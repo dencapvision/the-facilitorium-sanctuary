@@ -12,7 +12,7 @@ export const Navbar = () => {
         <Link href="/" className="flex items-center gap-4 group">
           <div className="relative h-10 w-10 overflow-hidden rounded-xl bg-white p-1.5 shadow-sm border border-royal-blue/5">
             <img 
-              src="https://nheppvjayzxlblkeanxs.supabase.co/storage/v1/object/public/The%20Facilitorium/Logo%20The%20Facilitorium3.png" 
+              src="https://nheppvjayzxlblkeanxs.supabase.co/storage/v1/object/public/The%20Facilitorium/Logo%20The%20facilitorium6.png" 
               alt="Logo" 
               className="h-full w-full object-contain"
             />
