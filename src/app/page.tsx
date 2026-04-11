@@ -186,9 +186,9 @@ export default function Home() {
                             <p className="text-[10px] text-royal-blue/40 font-bold uppercase tracking-wider">Community</p>
                          </div>
                       </div>
-                      <button className="w-full py-5 bg-royal-blue text-gold font-bold rounded-[1.5rem] shadow-premium hover:shadow-royal-blue/30 transition-all hover:-translate-y-1 text-lg">
+                      <Link href="/membership" className="w-full py-5 bg-royal-blue text-gold font-bold rounded-[1.5rem] shadow-premium hover:shadow-royal-blue/30 transition-all hover:-translate-y-1 text-lg flex items-center justify-center">
                          Apply for Sanctuary Access
-                      </button>
+                      </Link>
                       <div className="flex items-center justify-center gap-2">
                         <ShieldCheck size={14} className="text-gold" />
                         <p className="text-[10px] text-royal-blue/40 font-medium italic">
@@ -207,9 +207,9 @@ export default function Home() {
                    <p className="text-xs text-royal-blue/70 mb-4">
                       สมาชิกจะได้รับสิทธิ์เข้าถึงเครื่องมือ AI ออกแบบการสอน และคอร์สออนไลน์ระดับ Advanced ทั้งหมด
                    </p>
-                   <button className="w-full py-2 border border-royal-blue/20 text-royal-blue text-sm font-bold rounded-xl hover:bg-royal-blue/5 transition-colors">
+                   <Link href="/membership" className="w-full py-2 border border-royal-blue/20 text-royal-blue text-sm font-bold rounded-xl hover:bg-royal-blue/5 transition-colors flex items-center justify-center">
                       ดูแผนสมาชิก
-                   </button>
+                   </Link>
                 </div>
 
              </div>

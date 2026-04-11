@@ -48,9 +48,9 @@ export const Navbar = () => {
           <button className="hidden sm:block text-sm font-bold text-royal-blue/40 hover:text-royal-blue transition-all">
             Sign In
           </button>
-          <button className="px-6 py-2.5 bg-royal-blue text-gold font-bold rounded-xl shadow-premium hover:shadow-royal-blue/20 transition-all hover:scale-105 active:scale-95 text-xs tracking-widest uppercase border border-gold/10">
+          <Link href="/membership" className="px-6 py-2.5 bg-royal-blue text-gold font-bold rounded-xl shadow-premium hover:shadow-royal-blue/20 transition-all hover:scale-105 active:scale-95 text-xs tracking-widest uppercase border border-gold/10 flex items-center justify-center">
             Join Sanctuary
-          </button>
+          </Link>
         </div>
       </div>
     </nav>

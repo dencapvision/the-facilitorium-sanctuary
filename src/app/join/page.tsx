@@ -1,21 +1,44 @@
-'use client';
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
-import { ArrowRight, CheckCircle2, ShieldCheck, Zap } from 'lucide-react';
+import { ArrowRight, CheckCircle2, ShieldCheck, Zap, User } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
 
 export default function JoinPage() {
+  const [user, setUser] = useState<any>(null);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
   });
 
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      if (data.user) {
+        setUser(data.user);
+        setFormData({
+          name: data.user.user_metadata?.full_name || '',
+          email: data.user.email || '',
+        });
+      }
+    });
+  }, []);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // In a full implementation, we would save this to Supabase first as a 'pending' lead
-    // then redirect. For now, we redirect to the Stripe link provided.
-    window.location.href = 'https://buy.stripe.com/8x26oA6zC4eJeh60vu5EY02';
+    
+    // Base Stripe link
+    const stripeLink = 'https://buy.stripe.com/8x26oA6zC4eJeh60vu5EY02';
+    
+    // Build parameters for automatic fulfillment
+    const params = new URLSearchParams();
+    if (user) {
+      params.append('client_reference_id', user.id);
+      params.append('prefilled_email', user.email || '');
+    } else {
+      params.append('prefilled_email', formData.email);
+    }
+
+    window.location.href = `${stripeLink}?${params.toString()}`;
   };
 
   return (
