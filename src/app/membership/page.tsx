@@ -7,9 +7,6 @@ import { useVIPStatus } from '@/hooks/useVIPStatus';
 import { 
   CheckCircle2, 
   ShieldCheck, 
-  Zap, 
-  Globe, 
-  Award, 
   ArrowRight,
   Infinity,
   Gem
@@ -118,11 +115,26 @@ export default function MembershipPage() {
       <section className="py-24 px-4">
         <div className="max-w-4xl mx-auto text-center space-y-12">
            <h3 className="text-royal-blue/40 font-bold uppercase tracking-[0.3em] text-xs">Trusted By Professional Facilitators</h3>
-           <div className="flex flex-wrap justify-center gap-10 md:gap-20 opacity-30 grayscale hover:grayscale-0 transition-all">
-             <Globe size={48} />
-             <Award size={48} />
-             <ShieldCheck size={48} />
-             <Zap size={48} />
+           <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-40 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-700">
+             {[
+               'https://nheppvjayzxlblkeanxs.supabase.co/storage/v1/object/public/media/clients%20logo/Thai_Red_Cross_Society_Logo_(2022).svg',
+               'https://nheppvjayzxlblkeanxs.supabase.co/storage/v1/object/public/media/clients%20logo/Universal_Robina-Logo.wine.png',
+               'https://nheppvjayzxlblkeanxs.supabase.co/storage/v1/object/public/media/clients%20logo/SWU.png',
+               'https://nheppvjayzxlblkeanxs.supabase.co/storage/v1/object/public/media/clients%20logo/sook.png',
+               'https://nheppvjayzxlblkeanxs.supabase.co/storage/v1/object/public/media/clients%20logo/obec.go.th.png',
+               'https://nheppvjayzxlblkeanxs.supabase.co/storage/v1/object/public/media/clients%20logo/oncb.go.th.png',
+               'https://nheppvjayzxlblkeanxs.supabase.co/storage/v1/object/public/media/clients%20logo/central%20food%20retail%20(CFR).png',
+               'https://nheppvjayzxlblkeanxs.supabase.co/storage/v1/object/public/media/clients%20logo/Airports_of_Thailand_Logo.svg.png',
+               'https://nheppvjayzxlblkeanxs.supabase.co/storage/v1/object/public/media/clients%20logo/tistr.or.th.svg'
+             ].map((logo, i) => (
+               <div key={i} className="h-10 md:h-12 w-auto flex items-center justify-center">
+                 <img 
+                   src={logo} 
+                   alt="Client Logo" 
+                   className="h-full w-auto object-contain max-w-[120px]"
+                 />
+               </div>
+             ))}
            </div>
         </div>
       </section>
