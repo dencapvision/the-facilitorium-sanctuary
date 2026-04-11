@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { Mail, Phone, MapPin, Facebook, Instagram, Youtube, Linkedin } from 'lucide-react';
+import { Mail, Phone, MapPin, Facebook, Instagram, Youtube, Linkedin, ArrowRight } from 'lucide-react';
 
 export const Footer = () => {
   return (
@@ -69,11 +69,21 @@ export const Footer = () => {
               </div>
               <div className="flex items-center gap-3">
                 <Phone className="w-5 h-5 text-gold shrink-0" />
-                <span>02-XXX-XXXX</span>
+                <span>093-223-5919</span>
               </div>
               <div className="flex items-center gap-3">
                 <Mail className="w-5 h-5 text-gold shrink-0" />
-                <span>contact@denmasterfa.com</span>
+                <a href="mailto:dencapvision@gmail.com" className="hover:text-gold transition-colors">dencapvision@gmail.com</a>
+              </div>
+              <div className="pt-2">
+                <a 
+                  href="https://capvisionpartner.com/contact" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-xs font-bold text-gold hover:text-white transition-colors border-b border-gold/30 pb-1"
+                >
+                  Visit Contact Page <ArrowRight className="w-3 h-3" />
+                </a>
               </div>
             </div>
           </div>
