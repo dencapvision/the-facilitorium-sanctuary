@@ -17,6 +17,11 @@ const sarabun = Sarabun({
 export const metadata: Metadata = {
   title: "The Facilitorium | โรงเรียนวิทยากรผู้สร้างการเปลี่ยนแปลง",
   description: "คลังความรู้ เครื่องมือ หลักสูตร และคอมมูนิตี้ สำหรับวิทยากรและผู้รักการเรียนรู้ยุคใหม่",
+  icons: {
+    icon: 'https://nheppvjayzxlblkeanxs.supabase.co/storage/v1/object/public/The%20Facilitorium/Logo%20The%20facilitorium6.png',
+    shortcut: 'https://nheppvjayzxlblkeanxs.supabase.co/storage/v1/object/public/The%20Facilitorium/Logo%20The%20facilitorium6.png',
+    apple: 'https://nheppvjayzxlblkeanxs.supabase.co/storage/v1/object/public/The%20Facilitorium/Logo%20The%20facilitorium6.png',
+  },
 };
 
 export default function RootLayout({
