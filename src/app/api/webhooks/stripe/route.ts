@@ -3,7 +3,7 @@ import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-02-11.acacia',
+  apiVersion: '2026-03-25.dahlia' as any,
 });
 
 // Admin client with service role key to bypass RLS
