@@ -25,7 +25,7 @@ export default function Home() {
             <section className="space-y-8 animate-fade-in text-center lg:text-left">
               <div className="group relative w-full h-[400px] rounded-[2.5rem] overflow-hidden shadow-premium mb-10 border-4 border-white">
                 <img 
-                  src="https://nheppvjayzxlblkeanxs.supabase.co/storage/v1/object/public/The%20Facilitorium/Bradner%20The%20facilitorium.png" 
+                  src="https://nheppvjayzxlblkeanxs.supabase.co/storage/v1/object/public/The%20Facilitorium/Bradner%20The%20facilitorium1.png" 
                   alt="The Facilitorium Banner" 
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
