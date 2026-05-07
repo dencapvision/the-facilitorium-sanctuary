@@ -20,7 +20,10 @@
       "Bash(./node_modules/.bin/next-on-pages)",
       "Bash(node node_modules/@cloudflare/next-on-pages/bin/index.js)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(git submodule:*)",
+      "Bash(git rm:*)",
+      "Bash(node:*)"
     ]
   }
 }

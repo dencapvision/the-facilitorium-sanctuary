@@ -8,8 +8,8 @@
     "start": "next start -p 3002",
     "lint": "next lint",
     "upweb": "git add -A && git commit -m \"deploy: update web\" && git push",
-    "pages:build": "npx @cloudflare/next-on-pages@1",
-    "pages:deploy": "npm run pages:build && wrangler pages deploy"
+    "pages:build": "opennextjs-cloudflare build",
+    "pages:deploy": "opennextjs-cloudflare build && wrangler pages deploy"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
@@ -17,7 +17,7 @@
     "@supabase/supabase-js": "^2.48.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.473.0",
-    "next": "15.1.7",
+    "next": "^16.2.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "stripe": "^22.0.1",
@@ -25,6 +25,7 @@
   },
   "devDependencies": {
     "@cloudflare/next-on-pages": "^1.13.16",
+    "@opennextjs/cloudflare": "^1.19.8",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
