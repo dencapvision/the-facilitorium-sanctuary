@@ -16,7 +16,31 @@ const sarabun = Sarabun({
 
 export const metadata: Metadata = {
   title: "The Facilitorium | โรงเรียนวิทยากรผู้สร้างการเปลี่ยนแปลง",
-  description: "คลังความรู้ เครื่องมือ หลักสูตร และคอมมูนิตี้ สำหรับวิทยากรและผู้รักการเรียนรู้ยุคใหม่",
+  description: "คลังความรู้ เครื่องมือ หลักสูตร และคอมมูนิตี้ สำหรับวิทยากรและผู้รักการเรียนรู้ยุคใหม่ โดย เด่น Master Fa",
+  keywords: ["วิทยากร", "Facilitator", "LMS", "การเรียนรู้", "AI ช่วยสอน", "The Facilitorium", "FA-OS"],
+  authors: [{ name: "Den Master Fa" }],
+  openGraph: {
+    title: "The Facilitorium | โรงเรียนวิทยากรผู้สร้างการเปลี่ยนแปลง",
+    description: "คลังความรู้ เครื่องมือ หลักสูตร และคอมมูนิตี้ สำหรับวิทยากรและผู้รักการเรียนรู้ยุคใหม่",
+    url: "https://facilitorium.denmasterfa.com",
+    siteName: "The Facilitorium",
+    images: [
+      {
+        url: "https://nheppvjayzxlblkeanxs.supabase.co/storage/v1/object/public/The%20Facilitorium/Bradner%20The%20facilitorium1.png",
+        width: 1200,
+        height: 630,
+        alt: "The Facilitorium - Facilitation Operating System",
+      },
+    ],
+    locale: "th_TH",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "The Facilitorium | โรงเรียนวิทยากรผู้สร้างการเปลี่ยนแปลง",
+    description: "คลังความรู้ เครื่องมือ หลักสูตร และคอมมูนิตี้ สำหรับวิทยากรและผู้รักการเรียนรู้ยุคใหม่",
+    images: ["https://nheppvjayzxlblkeanxs.supabase.co/storage/v1/object/public/The%20Facilitorium/Bradner%20The%20facilitorium1.png"],
+  },
   icons: {
     icon: 'https://nheppvjayzxlblkeanxs.supabase.co/storage/v1/object/public/The%20Facilitorium/Logo%20The%20facilitorium6.png',
     shortcut: 'https://nheppvjayzxlblkeanxs.supabase.co/storage/v1/object/public/The%20Facilitorium/Logo%20The%20facilitorium6.png',

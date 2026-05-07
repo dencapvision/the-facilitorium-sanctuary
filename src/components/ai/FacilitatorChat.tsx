@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { MessageSquare, Send, X, Bot, Sparkles } from 'lucide-react';
+import { MessageSquare, Send, X, Bot, Sparkles, Loader2 } from 'lucide-react';
 
 export const FacilitatorChat = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -9,22 +9,45 @@ export const FacilitatorChat = () => {
     { role: 'assistant', content: 'สวัสดีครับ! ผมคือ Facilitator AI ยินดีที่ได้พบคุณที่ The Facilitorium ครับ มีอะไรให้ผมช่วยแนะนำเกี่ยวกับบทเรียนหรือเครื่องมือวิทยากรไหมครับ?' }
   ]);
   const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSend = () => {
-    if (!input.trim()) return;
+  const handleSend = async () => {
+    if (!input.trim() || isLoading) return;
     
-    // Add user message
-    const newMessages = [...messages, { role: 'user', content: input }];
-    setMessages(newMessages);
+    const userMessage = { role: 'user', content: input };
+    setMessages(prev => [...prev, userMessage]);
     setInput('');
+    setIsLoading(true);
 
-    // Mock AI Response (In real use, call Google GenAI here)
-    setTimeout(() => {
+    try {
+      // Prepare history for API (mapping role names if needed)
+      const history = messages.map(m => ({
+        role: m.role === 'assistant' ? 'model' : 'user',
+        parts: [{ text: m.content }]
+      }));
+
+      const response = await fetch('/api/ai/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: input, history }),
+      });
+
+      const data = await response.json();
+      
+      if (data.response) {
+        setMessages(prev => [...prev, { role: 'assistant', content: data.response }]);
+      } else {
+        throw new Error(data.error || 'Failed to get AI response');
+      }
+    } catch (error) {
+      console.error('Chat Error:', error);
       setMessages(prev => [...prev, { 
         role: 'assistant', 
-        content: `ขอบคุณสำหรับคำถามนะครับ! สำหรับเรื่อง "${input}" ผมแนะนำให้ลองดูในส่วนของ "คลังเครื่องมือฟรี (Free Tools)" หรือเริ่มศึกษาจาก "คอร์สวิทยากรพื้นฐาน" ใน Classroom ได้เลยครับ` 
+        content: 'ขออภัยครับ พี่เกิดข้อขัดข้องทางเทคนิคนิดหน่อย ลองใหม่อีกครั้งนะ' 
       }]);
-    }, 1000);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -71,26 +94,37 @@ export const FacilitatorChat = () => {
                 </div>
               </div>
             ))}
+            {isLoading && (
+              <div className="flex justify-start">
+                <div className="bg-white text-royal-blue shadow-sm rounded-2xl rounded-tl-none border border-royal-blue/5 p-3">
+                  <Loader2 className="animate-spin text-gold" size={16} />
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Input */}
           <div className="p-4 border-t border-royal-blue/5 bg-white">
-            <div className="flex items-center gap-2 bg-royal-blue/5 p-2 rounded-2xl">
+            <form 
+              onSubmit={(e) => { e.preventDefault(); handleSend(); }}
+              className="flex items-center gap-2 bg-royal-blue/5 p-2 rounded-2xl"
+            >
               <input 
                 type="text" 
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleSend()}
                 placeholder="พิมพ์ข้อความที่นี่..."
                 className="flex-1 bg-transparent border-none outline-none text-sm text-royal-blue px-2"
+                disabled={isLoading}
               />
               <button 
-                onClick={handleSend}
-                className="p-2 bg-royal-blue text-gold rounded-xl hover:bg-royal-blue-light transition-colors"
+                type="submit"
+                disabled={isLoading || !input.trim()}
+                className="p-2 bg-royal-blue text-gold rounded-xl hover:bg-royal-blue-light transition-colors disabled:opacity-50"
               >
                 <Send size={16} />
               </button>
-            </div>
+            </form>
           </div>
         </div>
       )}

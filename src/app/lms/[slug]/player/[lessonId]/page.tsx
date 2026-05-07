@@ -20,7 +20,9 @@ import {
     CheckCircle2,
     PenTool,
     Sparkles,
-    ShieldCheck
+    ShieldCheck,
+    Loader2,
+    Send
 } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -30,6 +32,13 @@ export default function LMSPlayer({ params }: { params: Promise<{ slug: string, 
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeTab, setActiveTab] = useState<'overview' | 'resources' | 'notes' | 'ai-coach'>('overview');
   const [note, setNote] = useState('');
+  
+  // AI Coach State
+  const [aiMessages, setAiMessages] = useState([
+    { role: 'assistant', content: 'สวัสดีครับน้อง... พี่ดีใจเหลือเกินที่คุณเลือกมาเติบโตด้วยกันในพื้นที่นี้ มีอะไรอยากปรึกษาพี่เกี่ยวกับบทเรียนนี้ไหมครับ?' }
+  ]);
+  const [aiInput, setAiInput] = useState('');
+  const [isAiLoading, setIsAiLoading] = useState(false);
 
   const course = COURSES.find(c => c.slug === slug);
   if (!course) return notFound();
@@ -40,6 +49,40 @@ export default function LMSPlayer({ params }: { params: Promise<{ slug: string, 
   const currentLesson = allLessons[currentLessonIndex] || allLessons[0];
   const prevLesson = allLessons[currentLessonIndex - 1];
   const nextLesson = allLessons[currentLessonIndex + 1];
+
+  const handleAiSend = async () => {
+    if (!aiInput.trim() || isAiLoading) return;
+    
+    const userMsg = { role: 'user', content: aiInput };
+    setAiMessages(prev => [...prev, userMsg]);
+    setAiInput('');
+    setIsAiLoading(true);
+
+    try {
+      const history = aiMessages.map(m => ({
+        role: m.role === 'assistant' ? 'model' : 'user',
+        parts: [{ text: m.content }]
+      }));
+
+      const response = await fetch('/api/ai/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          prompt: `คำถามจากบทเรียน "${currentLesson.title}": ${aiInput}`, 
+          history 
+        }),
+      });
+
+      const data = await response.json();
+      if (data.response) {
+        setAiMessages(prev => [...prev, { role: 'assistant', content: data.response }]);
+      }
+    } catch (error) {
+      console.error('AI Coach Error:', error);
+    } finally {
+      setIsAiLoading(false);
+    }
+  };
 
   return (
     <div className="flex flex-col h-screen bg-royal-blue overflow-hidden selection:bg-gold selection:text-royal-blue">
@@ -222,31 +265,56 @@ export default function LMSPlayer({ params }: { params: Promise<{ slug: string, 
                             </div>
 
                             <div className="flex-1 p-6 overflow-y-auto space-y-6 custom-scrollbar">
-                                <div className="flex gap-4 max-w-[80%]">
-                                    <div className="w-8 h-8 bg-gold/20 rounded-full shrink-0 flex items-center justify-center text-gold border border-gold/20">
-                                        พี่
+                                {aiMessages.map((msg, idx) => (
+                                    <div key={idx} className={`flex gap-4 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
+                                        <div className={`w-8 h-8 rounded-full shrink-0 flex items-center justify-center text-[10px] font-black border ${
+                                            msg.role === 'assistant' 
+                                            ? 'bg-gold/20 text-gold border-gold/20' 
+                                            : 'bg-white/10 text-white border-white/10'
+                                        }`}>
+                                            {msg.role === 'assistant' ? 'พี่' : 'ฉัน'}
+                                        </div>
+                                        <div className={`p-4 rounded-2xl ${
+                                            msg.role === 'assistant' 
+                                            ? 'bg-white/5 border border-white/10 rounded-tl-none' 
+                                            : 'bg-gold/10 border border-gold/20 rounded-tr-none text-white/90'
+                                        }`}>
+                                            <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                                                {msg.content}
+                                            </p>
+                                        </div>
                                     </div>
-                                    <div className="bg-white/5 border border-white/10 p-4 rounded-2xl rounded-tl-none">
-                                        <p className="text-sm leading-relaxed text-white/90">
-                                            สวัสดีครับน้อง... พี่ดีใจเหลือเกินที่คุณเลือกมาเติบโตด้วยกันในพื้นที่นี้ 
-                                            จากบทเรียนเมื่อครู่ พี่อยากชวนสะท้อนนิดนึงว่า "อะไรคือสิ่งที่คุณรู้สึกว่ายากที่สุดในการสร้าง Safety ให้กับกลุ่ม?" 
-                                            เล่าให้พี่ฟังได้เลยนะ พี่พร้อมฟังและประคองการเรียนรู้นี้ไปกับคุณครับ
-                                        </p>
+                                ))}
+                                {isAiLoading && (
+                                    <div className="flex gap-4">
+                                        <div className="w-8 h-8 bg-gold/20 rounded-full shrink-0 flex items-center justify-center text-gold border border-gold/20">
+                                            <Loader2 size={14} className="animate-spin" />
+                                        </div>
                                     </div>
-                                </div>
+                                )}
                             </div>
 
                             <div className="p-4 bg-white/5 border-t border-white/10">
-                                <div className="relative">
+                                <form 
+                                    onSubmit={(e) => { e.preventDefault(); handleAiSend(); }}
+                                    className="relative"
+                                >
                                     <input 
                                         type="text" 
+                                        value={aiInput}
+                                        onChange={(e) => setAiInput(e.target.value)}
                                         placeholder="พิมพ์ข้อความคุยกับพี่ชาย..."
                                         className="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-4 text-white pr-12 focus:outline-none focus:border-gold transition-all"
+                                        disabled={isAiLoading}
                                     />
-                                    <button className="absolute right-4 top-1/2 -translate-y-1/2 text-gold">
-                                        <ChevronRight />
+                                    <button 
+                                        type="submit"
+                                        className="absolute right-4 top-1/2 -translate-y-1/2 text-gold disabled:opacity-50"
+                                        disabled={isAiLoading || !aiInput.trim()}
+                                    >
+                                        <Send size={20} />
                                     </button>
-                                </div>
+                                </form>
                             </div>
                         </div>
                     )}

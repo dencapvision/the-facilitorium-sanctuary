@@ -6,9 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start -p 3002",
-    "lint": "next lint"
+    "lint": "next lint",
+    "upweb": "next build && git add -A && git commit -m \"deploy: update web\" && git push"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "@supabase/ssr": "^0.10.2",
     "@supabase/supabase-js": "^2.48.1",
     "clsx": "^2.1.1",

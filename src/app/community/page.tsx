@@ -1,8 +1,10 @@
 "use client";
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
+import { supabase } from '@/lib/supabase';
+import { ForumPost, ForumCategory } from '@/types';
 import { 
   Users, 
   MessageSquare, 
@@ -13,68 +15,47 @@ import {
   Share2, 
   MessageCircle,
   Eye,
-  Plus
+  Plus,
+  Loader2
 } from 'lucide-react';
 import Link from 'next/link';
 
 export default function CommunityPage() {
-  const categories = [
-    {
-      title: 'Ideas & Creative Teaching',
-      desc: 'แชร์ไอเดียการจัดการเรียนรู้ กิจกรรม Ice Breaking และเทคนิคการสอนใหม่ๆ',
-      icon: <Lightbulb className="w-8 h-8" />,
-      tag: 'Teaching Tips',
-      color: 'gold',
-      size: 'large'
-    },
-    {
-      title: 'Case Study Vault',
-      desc: 'ถอดบทเรียนจากเหตุการณ์จริง ปัญหาที่พบ และแนวทางการแก้ไขสไตล์ Facilitator',
-      icon: <BookOpen className="w-6 h-6" />,
-      tag: 'Real Cases',
-      color: 'royal-blue',
-      size: 'small'
-    },
-    {
-      title: 'PLC Mastermind',
-      desc: 'พื้นที่พูดคุยประเด็นวิชาชีพ ปรึกษา และเติบโตไปด้วยกันในชุมชนวิทยากร',
-      icon: <Users className="w-6 h-6" />,
-      tag: 'Discussion',
-      color: 'royal-blue',
-      size: 'small'
-    }
-  ];
+  const [loading, setLoading] = useState(true);
+  const [categories, setCategories] = useState<ForumCategory[]>([]);
+  const [posts, setPosts] = useState<ForumPost[]>([]);
 
-  const discussions = [
-    {
-      author: 'เด่น Master Fa',
-      role: 'Founding Facilitator',
-      avatar: 'https://i.pravatar.cc/150?u=den',
-      title: 'วิธีจัดการเมื่อเจอลูกคอ (Resistant Participant) ในห้องอบรมแบบสันติวิธี',
-      snippet: 'วันนี้ผมไปเจอเคสหนึ่งที่น่าสนใจมากครับ มีผู้เข้าอบรมที่ไม่ยอมร่วมกิจกรรมเลย...',
-      tag: 'Case Study',
-      stats: { views: '1.2k', comments: 24, sparks: 45 },
-      time: '2 hours ago'
-    },
-    {
-      author: 'คุณเปิ้ล Expert',
-      avatar: 'https://i.pravatar.cc/150?u=ple',
-      title: 'Ice Breaking: กิจกรรม "ภาพสะท้อนใจ" ใช้เวลาแค่ 10 นาที แต่เจาะลึกความรู้สึกได้ดีมาก',
-      snippet: 'ส่งต่อกิจกรรมที่ผมใช้เป็นประจำตอนเช้าครับ อุปกรณ์มีแค่กระดาษ A4...',
-      tag: 'Idea Share',
-      stats: { views: '850', comments: 12, sparks: 32 },
-      time: '5 hours ago'
-    },
-    {
-      author: 'วิทยากรนิรนาม',
-      avatar: 'https://i.pravatar.cc/150?u=anonymous',
-      title: 'ใครมีเครื่องมือ AI ช่วยสรุปเนื้อหาตอนจบ Workshop บ้างครับ?',
-      snippet: 'กำลังหาเครื่องมือที่ช่วยให้ผู้เข้าอบรมเห็นภาพรวมสิ่งที่เรียนมาทั้งหมด...',
-      tag: 'Question',
-      stats: { views: '420', comments: 8, sparks: 15 },
-      time: 'Yesterday'
+  useEffect(() => {
+    async function fetchCommunityData() {
+      // Fetch Categories
+      const { data: catData } = await supabase.from('forum_categories').select('*');
+      if (catData) setCategories(catData);
+
+      // Fetch Posts with Author and Category
+      const { data: postData } = await supabase
+        .from('forum_posts')
+        .select(`
+          *,
+          author:users(name, avatar_url),
+          category:forum_categories(title)
+        `)
+        .order('created_at', { ascending: false });
+      
+      if (postData) setPosts(postData);
+      setLoading(false);
     }
-  ];
+
+    fetchCommunityData();
+  }, []);
+
+  const getIcon = (name: string) => {
+    switch (name) {
+      case 'Lightbulb': return <Lightbulb className="w-8 h-8" />;
+      case 'BookOpen': return <BookOpen className="w-6 h-6" />;
+      case 'Users': return <Users className="w-6 h-6" />;
+      default: return <MessageSquare className="w-6 h-6" />;
+    }
+  };
 
   return (
     <main className="min-h-screen bg-[#FDFDFD] relative selection:bg-gold/30">
@@ -106,23 +87,23 @@ export default function CommunityPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {categories.map((cat, i) => (
               <div 
-                key={i} 
-                className={`group relative p-8 rounded-[2.5rem] glass-morphism border border-white/40 transition-all duration-500 hover:shadow-premium hover:-translate-y-2 flex flex-col h-full ${cat.size === 'large' ? 'md:col-span-1' : 'md:col-span-1'}`}
+                key={cat.id} 
+                className="group relative p-8 rounded-[2.5rem] glass-morphism border border-white/40 transition-all duration-500 hover:shadow-premium hover:-translate-y-2 flex flex-col h-full"
               >
                 <div className="absolute inset-0 bg-gold/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[2.5rem]"></div>
                 
                 <div className="relative z-10 flex justify-between items-start mb-6">
                   <div className={`p-4 rounded-2xl bg-royal-blue/5 ${cat.color === 'gold' ? 'text-gold' : 'text-royal-blue'} group-hover:bg-royal-blue group-hover:text-gold transition-all duration-500`}>
-                    {cat.icon}
+                    {getIcon(cat.icon_name)}
                   </div>
                   <span className="px-4 py-1.5 rounded-full bg-gold/10 text-gold border border-gold/20 text-[10px] font-bold tracking-widest uppercase">
-                    {cat.tag}
+                    PLC SPACE
                   </span>
                 </div>
 
                 <div className="relative z-10 flex-grow">
                   <h3 className="text-2xl font-serif font-bold text-royal-blue mb-3 group-hover:text-gold transition-colors">{cat.title}</h3>
-                  <p className="text-royal-blue/50 text-sm leading-relaxed font-light">{cat.desc}</p>
+                  <p className="text-royal-blue/50 text-sm leading-relaxed font-light">{cat.description}</p>
                 </div>
 
                 <div className="relative z-10 mt-8 flex items-center gap-2 text-gold font-bold text-xs tracking-widest uppercase translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
@@ -165,30 +146,38 @@ export default function CommunityPage() {
           </div>
 
           <div className="space-y-8">
-            {discussions.map((disc, i) => (
-              <div key={i} className="group p-8 rounded-[2rem] bg-white border border-charcoal/5 hover:border-gold/30 hover:shadow-premium transition-all duration-500">
+            {loading ? (
+              <div className="py-20 text-center">
+                <Loader2 className="animate-spin text-gold mx-auto mb-4" size={40} />
+                <p className="text-royal-blue/40 font-serif">กำลังรวมพลังความคิด...</p>
+              </div>
+            ) : posts.length > 0 ? posts.map((post) => (
+              <div key={post.id} className="group p-8 rounded-[2rem] bg-white border border-charcoal/5 hover:border-gold/30 hover:shadow-premium transition-all duration-500">
                 <div className="flex items-center gap-4 mb-6">
-                  <img src={disc.avatar} alt={disc.author} className="w-12 h-12 rounded-full border-2 border-gold/20" />
+                  <div className="w-12 h-12 rounded-full border-2 border-gold/20 bg-royal-blue/5 flex items-center justify-center text-royal-blue font-bold overflow-hidden">
+                    {post.author?.avatar_url ? <img src={post.author.avatar_url} alt={post.author.name} /> : post.author?.name?.[0]}
+                  </div>
                   <div>
                     <h4 className="font-bold text-royal-blue flex items-center gap-2">
-                      {disc.author}
-                      {disc.role && <span className="bg-gold/10 text-gold text-[9px] px-2 py-0.5 rounded-full font-black uppercase tracking-widest">{disc.role}</span>}
+                      {post.author?.name}
                     </h4>
-                    <p className="text-[10px] text-charcoal/40 font-bold uppercase tracking-widest">{disc.time}</p>
+                    <p className="text-[10px] text-charcoal/40 font-bold uppercase tracking-widest">
+                      {new Date(post.created_at).toLocaleDateString('th-TH')}
+                    </p>
                   </div>
                   <div className="ml-auto">
                     <span className="px-3 py-1 bg-royal-blue/5 text-royal-blue/60 rounded-full text-[9px] font-black uppercase tracking-widest">
-                      {disc.tag}
+                      {post.tag || 'General'}
                     </span>
                   </div>
                 </div>
 
                 <div className="space-y-4">
                   <h3 className="text-xl font-serif font-bold text-royal-blue leading-tight group-hover:text-gold transition-colors">
-                    {disc.title}
+                    {post.title}
                   </h3>
                   <p className="text-sm text-charcoal/60 leading-relaxed line-clamp-2 italic">
-                    "{disc.snippet}"
+                    "{post.content.substring(0, 150)}..."
                   </p>
                 </div>
 
@@ -196,15 +185,11 @@ export default function CommunityPage() {
                   <div className="flex items-center gap-6">
                     <div className="flex items-center gap-2 text-charcoal/40 group/stat hover:text-gold transition-colors cursor-pointer">
                       <Eye size={16} />
-                      <span className="text-[11px] font-bold">{disc.stats.views}</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-charcoal/40 group/stat hover:text-royal-blue transition-colors cursor-pointer">
-                      <MessageCircle size={16} />
-                      <span className="text-[11px] font-bold">{disc.stats.comments}</span>
+                      <span className="text-[11px] font-bold">{post.views_count}</span>
                     </div>
                     <div className="flex items-center gap-2 text-charcoal/40 group/stat hover:text-red-400 transition-colors cursor-pointer">
                       <Sparkles size={16} />
-                      <span className="text-[11px] font-bold">{disc.stats.sparks}</span>
+                      <span className="text-[11px] font-bold">{post.sparks_count}</span>
                     </div>
                   </div>
                   <button className="flex items-center gap-2 text-[10px] font-black text-gold uppercase tracking-[0.2em] hover:translate-x-1 transition-transform">
@@ -212,14 +197,20 @@ export default function CommunityPage() {
                   </button>
                 </div>
               </div>
-            ))}
+            )) : (
+              <div className="py-20 text-center bg-white rounded-[2rem] border border-dashed border-royal-blue/10">
+                <p className="text-royal-blue/40 italic">ยังไม่มีบทสนทนาในขณะนี้ เริ่มต้นแบ่งปันเรื่องราวของคุณได้เลย</p>
+              </div>
+            )}
           </div>
 
-          <div className="mt-16 text-center">
-             <button className="px-10 py-4 rounded-2xl border border-royal-blue/10 text-royal-blue font-bold hover:bg-royal-blue hover:text-gold transition-all shadow-sm">
-               Load More Wisdom
-             </button>
-          </div>
+          {!loading && posts.length > 0 && (
+            <div className="mt-16 text-center">
+               <button className="px-10 py-4 rounded-2xl border border-royal-blue/10 text-royal-blue font-bold hover:bg-royal-blue hover:text-gold transition-all shadow-sm">
+                 Load More Wisdom
+               </button>
+            </div>
+          )}
         </div>
       </section>
 

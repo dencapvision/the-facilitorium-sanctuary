@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3:*)",
+      "Bash(xxd)",
+      "Read(//e/00.1_ห้องพัฒนาเวบและแอพด้วย AI/Anti_03.2\\) The Facilitorium/=== src/app/**)",
+      "Read(//e/00.1_ห้องพัฒนาเวบและแอพด้วย AI/Anti_03.2\\) The Facilitorium/**)",
+      "Bash(npm run:*)",
+      "Bash(npx tsc:*)"
+    ]
+  }
+}

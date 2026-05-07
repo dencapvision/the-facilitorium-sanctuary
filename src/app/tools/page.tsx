@@ -17,9 +17,11 @@ import {
   Sparkles,
   Lock
 } from 'lucide-react';
+import { SessionDesigner } from '@/components/tools/SessionDesigner';
 
 export default function ToolsPage() {
   const [activeCategory, setActiveCategory] = useState('All');
+  const [searchQuery, setSearchQuery] = useState('');
 
   const categories = ['All', 'AI Tools', 'Workshop Deck', 'Digital Resource', 'Template'];
 
@@ -86,9 +88,12 @@ export default function ToolsPage() {
     }
   ];
 
-  const filteredTools = activeCategory === 'All' 
-    ? tools 
-    : tools.filter(tool => tool.category === activeCategory);
+  const filteredTools = tools.filter(tool => {
+    const matchesCategory = activeCategory === 'All' || tool.category === activeCategory;
+    const q = searchQuery.toLowerCase();
+    const matchesSearch = !q || tool.title.toLowerCase().includes(q) || tool.desc.toLowerCase().includes(q);
+    return matchesCategory && matchesSearch;
+  });
 
   return (
     <main className="min-h-screen bg-[#FDFDFD] relative selection:bg-gold/30">
@@ -136,7 +141,9 @@ export default function ToolsPage() {
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-royal-blue/30 group-focus-within:text-gold transition-colors" size={18} />
             <input 
               type="text" 
-              placeholder="ค้นหาเครื่องมือ..." 
+              placeholder="ค้นหาเครื่องมือ..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)} 
               className="w-full pl-12 pr-4 py-3 rounded-2xl bg-royal-blue/5 border-transparent border-2 focus:border-gold focus:bg-white outline-none transition-all text-sm font-medium"
             />
           </div>
@@ -226,46 +233,10 @@ export default function ToolsPage() {
         </div>
       </section>
 
-      {/* Featured Banner */}
+      {/* AI Tool Section */}
       <section className="py-20 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="relative rounded-[3rem] bg-royal-blue p-12 md:p-20 overflow-hidden shadow-2xl">
-            <div className="absolute inset-0 bg-gold/5 sanctuary-grain z-0"></div>
-            <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-gold opacity-[0.05] blur-[150px] -mb-64 -mr-64"></div>
-            
-            <div className="relative z-10 flex flex-col md:flex-row items-center gap-12">
-              <div className="md:w-3/5 text-center md:text-left">
-                <div className="flex items-center gap-3 text-gold mb-6 justify-center md:justify-start">
-                  <Sparkles />
-                  <span className="text-xs font-black uppercase tracking-[0.3em]">Signature Tool</span>
-                </div>
-                <h2 className="text-4xl md:text-6xl font-serif font-black text-white leading-tight mb-8">
-                  <span className="text-gold italic">Wise Brother</span> <br />
-                  AI Coach อัจฉริยะของคุณ
-                </h2>
-                <p className="text-lg md:text-xl text-white/50 font-light leading-relaxed mb-10 max-w-xl">
-                  ให้ AI ที่ผ่านการเทรนจากองค์ความรู้ของ CAP Vision ช่วยคุณร่างโครงสร้าง Workshop 
-                  เตรียมคีย์เวิร์ดทรงพลัง และแก้ปัญหาเฉพาะหน้าในห้องอบรมได้ทันที
-                </p>
-                <div className="flex flex-col sm:flex-row items-center gap-6 justify-center md:justify-start">
-                  <button className="px-10 py-5 bg-gold text-royal-blue font-black rounded-2xl shadow-2xl hover:bg-white transition-all transform hover:-translate-y-1">
-                    ทดลองใช้งานผ่าน VIP
-                  </button>
-                  <button className="text-white/40 hover:text-white transition-colors text-sm font-bold tracking-widest uppercase flex items-center gap-2">
-                    Learn more <ExternalLink size={14} />
-                  </button>
-                </div>
-              </div>
-              <div className="md:w-2/5 flex justify-center">
-                 <div className="relative">
-                   <div className="absolute inset-0 bg-gold blur-[80px] opacity-20 animate-pulse"></div>
-                   <div className="relative w-64 h-64 md:w-80 md:h-80 bg-white/5 backdrop-blur-3xl rounded-[3rem] border border-white/20 flex items-center justify-center p-12 shadow-2xl">
-                      <Cpu size={120} className="text-gold opacity-80" strokeWidth={1} />
-                   </div>
-                 </div>
-              </div>
-            </div>
-          </div>
+        <div className="max-w-4xl mx-auto">
+          <SessionDesigner />
         </div>
       </section>
 
