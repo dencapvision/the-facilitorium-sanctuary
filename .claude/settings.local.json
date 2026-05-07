@@ -6,7 +6,21 @@
       "Read(//e/00.1_ห้องพัฒนาเวบและแอพด้วย AI/Anti_03.2\\) The Facilitorium/=== src/app/**)",
       "Read(//e/00.1_ห้องพัฒนาเวบและแอพด้วย AI/Anti_03.2\\) The Facilitorium/**)",
       "Bash(npm run:*)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "mcp__claude_ai_Vercel__list_teams",
+      "mcp__claude_ai_Vercel__deploy_to_vercel",
+      "Bash(npx vercel:*)",
+      "Bash(git push:*)",
+      "Bash(git config:*)",
+      "Bash(nslookup facilitorium.denmasterfa.com)",
+      "Bash(curl -I https://facilitorium.denmasterfa.com)",
+      "Bash(npx wrangler:*)",
+      "Bash(npm install:*)",
+      "Bash(node -e \"require\\('@cloudflare/next-on-pages'\\); console.log\\('installed'\\)\")",
+      "Bash(./node_modules/.bin/next-on-pages)",
+      "Bash(node node_modules/@cloudflare/next-on-pages/bin/index.js)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ]
   }
 }
