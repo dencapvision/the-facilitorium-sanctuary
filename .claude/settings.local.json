@@ -31,7 +31,19 @@
       "Bash(kill %1)",
       "Bash(wait)",
       "Bash(curl -s -I \"https://the-facilitorium-sanctuary.dencapvision.workers.dev/_next/static/chunks/webpack-abc123.js\")",
-      "Bash(curl -s \"https://the-facilitorium-sanctuary.dencapvision.workers.dev/robots.txt\")"
+      "Bash(curl -s \"https://the-facilitorium-sanctuary.dencapvision.workers.dev/robots.txt\")",
+      "WebFetch(domain:facilitorium.denmasterfa.com)",
+      "WebFetch(domain:supabase.com)",
+      "WebFetch(domain:dash.cloudflare.com)",
+      "mcp__claude_ai_Cloudflare_Developer_Platform__accounts_list",
+      "mcp__claude_ai_Cloudflare_Developer_Platform__r2_bucket_get",
+      "mcp__claude_ai_Supabase__get_project",
+      "WebFetch(domain:pub-841496a77d134f598379f8266491e0a2.r2.dev)",
+      "WebFetch(domain:assets.capvisionpartner.com)",
+      "Bash(npm audit:*)",
+      "Bash(npm list:*)",
+      "mcp__claude_ai_Supabase__list_tables",
+      "mcp__claude_ai_Supabase__execute_sql"
     ]
   }
 }

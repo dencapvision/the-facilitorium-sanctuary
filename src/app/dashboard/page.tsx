@@ -4,12 +4,12 @@ import React, { useEffect, useState } from 'react';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { supabase } from '@/lib/supabase';
-import { 
-  Trophy, 
-  Calendar, 
-  BookOpen, 
-  MessageSquare, 
-  ArrowUpRight, 
+import {
+  Trophy,
+  Calendar,
+  BookOpen,
+  MessageSquare,
+  ArrowUpRight,
   Clock,
   ChevronRight,
   Target
@@ -24,37 +24,50 @@ export default function DashboardPage() {
 
   useEffect(() => {
     async function fetchDashboardData() {
-      // For now, we fetch the latest registered user as a demonstration
-      // In production, this will be filtered by the logged-in user's session
+      // Step 1: Get authenticated user from session
+      const { data: { user: authUser } } = await supabase.auth.getUser();
+
+      if (!authUser) {
+        window.location.href = '/login';
+        return;
+      }
+
+      // Step 2: Fetch user profile from public.users (same UUID as auth.users via trigger)
       const { data: user } = await supabase
         .from('users')
         .select('*')
-        .order('created_at', { ascending: false })
+        .eq('id', authUser.id)
+        .maybeSingle();
+
+      // Fallback to auth metadata if public.users row not yet created
+      setUserData(user ?? {
+        id: authUser.id,
+        name: authUser.user_metadata?.full_name ?? authUser.user_metadata?.name ?? 'FA-OS Member',
+        email: authUser.email ?? '',
+      });
+
+      // Step 3: Fetch active subscription for this user
+      const { data: sub } = await supabase
+        .from('subscriptions')
+        .select('*')
+        .eq('user_id', authUser.id)
+        .eq('status', 'active')
+        .gt('expiry_date', new Date().toISOString())
+        .order('expiry_date', { ascending: false })
         .limit(1)
-        .single();
+        .maybeSingle();
 
-      if (user) {
-        setUserData(user);
-        
-        const { data: sub } = await supabase
-          .from('subscriptions')
-          .select('*')
-          .eq('user_id', user.id)
-          .order('expiry_date', { ascending: false })
-          .limit(1)
-          .single();
-        
-        setSubscription(sub);
+      setSubscription(sub);
 
-        const { data: logs } = await supabase
-          .from('activity_logs')
-          .select('*')
-          .eq('user_id', user.id)
-          .order('created_at', { ascending: false })
-          .limit(3);
-        
-        setActivities(logs || []);
-      }
+      // Step 4: Fetch recent activity logs
+      const { data: logs } = await supabase
+        .from('activity_logs')
+        .select('*')
+        .eq('user_id', authUser.id)
+        .order('created_at', { ascending: false })
+        .limit(3);
+
+      setActivities(logs ?? []);
       setLoading(false);
     }
 
@@ -67,15 +80,16 @@ export default function DashboardPage() {
     </div>
   );
 
-  // Derived data
-  const progress = 65; // This could be calculated from course_progress table if added
-  const expiryDate = subscription?.expiry_date ? new Date(subscription.expiry_date).toLocaleDateString('th-TH') : 'No active subscription';
-  const userName = userData?.name || 'Sanctum Member';
+  const progress = 65;
+  const expiryDate = subscription?.expiry_date
+    ? new Date(subscription.expiry_date).toLocaleDateString('th-TH')
+    : 'ยังไม่มีสมาชิก';
+  const userName = userData?.name ?? 'Sanctum Member';
 
   return (
     <main className="min-h-screen bg-off-white">
       <Navbar />
-      
+
       <div className="pt-32 pb-20 px-4">
         <div className="max-w-6xl mx-auto space-y-8">
           {/* Header Section */}
@@ -123,10 +137,9 @@ export default function DashboardPage() {
                       <p className="text-white/40 text-[10px] uppercase tracking-widest font-sans">Current Progress</p>
                     </div>
                   </div>
-                  
-                  {/* Progress Bar */}
+
                   <div className="w-full h-3 bg-white/10 rounded-full overflow-hidden">
-                    <div 
+                    <div
                       className="h-full bg-gold shadow-[0_0_20px_rgba(212,175,55,0.4)] transition-all duration-1000"
                       style={{ width: `${progress}%` }}
                     ></div>

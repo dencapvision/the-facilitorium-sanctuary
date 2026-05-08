@@ -19,15 +19,18 @@ const config: Config = {
           light: 'hsl(46, 65%, 62%)',
           dark: 'hsl(46, 65%, 42%)',
         },
+        'off-white': '#F8F7F4',
+        'charcoal': '#3D3D3D',
         'sanctuary': {
-           white: '#FFFFFF',
-           cream: '#FAF9F6',
-           glass: 'rgba(255, 255, 255, 0.1)',
+          white: '#FFFFFF',
+          cream: '#FAF9F6',
+          glass: 'rgba(255, 255, 255, 0.1)',
         }
       },
       fontFamily: {
-        serif: ['var(--font-serif)', 'serif'],
-        sans: ['var(--font-sans)', 'sans-serif'],
+        // Fixed: match CSS variables defined in layout.tsx
+        serif: ['var(--font-heading)', 'serif'],
+        sans: ['var(--font-body)', 'sans-serif'],
       },
       animation: {
         'shimmer': 'shimmer 2s infinite linear',

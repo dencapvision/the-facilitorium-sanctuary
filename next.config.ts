@@ -10,6 +10,10 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
+        hostname: "assets.capvisionpartner.com",
+      },
+      {
+        protocol: "https",
         hostname: "images.unsplash.com",
       },
       {

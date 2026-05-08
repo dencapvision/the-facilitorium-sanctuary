@@ -117,20 +117,20 @@ export default function MembershipPage() {
            <h3 className="text-royal-blue/40 font-bold uppercase tracking-[0.3em] text-xs">Trusted By Professional Facilitators</h3>
            <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-40 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-700">
              {[
-               'https://pub-841496a77d134f598379f8266491e0a2.r2.dev/media/clients%20logo/Thai_Red_Cross_Society_Logo_(2022).svg',
-               'https://pub-841496a77d134f598379f8266491e0a2.r2.dev/media/clients%20logo/Universal_Robina-Logo.wine.png',
-               'https://pub-841496a77d134f598379f8266491e0a2.r2.dev/media/clients%20logo/SWU.png',
-               'https://pub-841496a77d134f598379f8266491e0a2.r2.dev/media/clients%20logo/sook.png',
-               'https://pub-841496a77d134f598379f8266491e0a2.r2.dev/media/clients%20logo/obec.go.th.png',
-               'https://pub-841496a77d134f598379f8266491e0a2.r2.dev/media/clients%20logo/oncb.go.th.png',
-               'https://pub-841496a77d134f598379f8266491e0a2.r2.dev/media/clients%20logo/central%20food%20retail%20(CFR).png',
-               'https://pub-841496a77d134f598379f8266491e0a2.r2.dev/media/clients%20logo/Airports_of_Thailand_Logo.svg.png',
-               'https://pub-841496a77d134f598379f8266491e0a2.r2.dev/media/clients%20logo/tistr.or.th.svg'
+               { src: 'https://assets.capvisionpartner.com/media/clients%20logo/Thai_Red_Cross_Society_Logo_(2022).svg', alt: 'Thai Red Cross Society' },
+               { src: 'https://assets.capvisionpartner.com/media/clients%20logo/Universal_Robina-Logo.wine.png', alt: 'Universal Robina Corporation' },
+               { src: 'https://assets.capvisionpartner.com/media/clients%20logo/SWU.png', alt: 'Srinakharinwirot University' },
+               { src: 'https://assets.capvisionpartner.com/media/clients%20logo/sook.png', alt: 'Sook' },
+               { src: 'https://assets.capvisionpartner.com/media/clients%20logo/obec.go.th.png', alt: 'สำนักงานคณะกรรมการการศึกษาขั้นพื้นฐาน (OBEC)' },
+               { src: 'https://assets.capvisionpartner.com/media/clients%20logo/oncb.go.th.png', alt: 'สำนักงาน ป.ป.ส. (ONCB)' },
+               { src: 'https://assets.capvisionpartner.com/media/clients%20logo/central%20food%20retail%20(CFR).png', alt: 'Central Food Retail' },
+               { src: 'https://assets.capvisionpartner.com/media/clients%20logo/Airports_of_Thailand_Logo.svg.png', alt: 'Airports of Thailand (AOT)' },
+               { src: 'https://assets.capvisionpartner.com/media/clients%20logo/tistr.or.th.svg', alt: 'สถาบันวิจัยวิทยาศาสตร์และเทคโนโลยีแห่งประเทศไทย (TISTR)' },
              ].map((logo, i) => (
                <div key={i} className="h-10 md:h-12 w-auto flex items-center justify-center">
-                 <img 
-                   src={logo} 
-                   alt="Client Logo" 
+                 <img
+                   src={logo.src}
+                   alt={logo.alt}
                    className="h-full w-auto object-contain max-w-[120px]"
                  />
                </div>
