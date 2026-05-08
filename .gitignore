@@ -22,8 +22,14 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# local env files
+# local env files — never commit env files with secrets
 .env*.local
+.env.production
+.env.local
+.env
+
+# cloudflare build output — contains injected env secrets
+.open-next/
 
 # vercel
 .vercel
