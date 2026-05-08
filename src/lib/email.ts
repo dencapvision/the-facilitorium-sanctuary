@@ -1,10 +1,9 @@
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 const FROM = 'FA-OS <noreply@facilitorium.denmasterfa.com>';
 
 export async function sendWelcomeEmail(to: string, name: string, expiryDate: string) {
+  const resend = new Resend(process.env.RESEND_API_KEY);
   return resend.emails.send({
     from: FROM,
     to,

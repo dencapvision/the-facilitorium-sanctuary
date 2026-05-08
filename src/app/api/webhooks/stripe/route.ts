@@ -18,7 +18,7 @@ export async function POST(req: Request) {
   }
 
   const stripe = new Stripe(stripeKey, {
-    apiVersion: '2025-01-27.acacia',
+    apiVersion: '2025-02-24.acacia',
   });
 
   const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
