@@ -23,7 +23,15 @@
       "Bash(git commit:*)",
       "Bash(git submodule:*)",
       "Bash(git rm:*)",
-      "Bash(node:*)"
+      "Bash(node:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(npx opennextjs-cloudflare:*)",
+      "Bash(curl -s \"https://the-facilitorium-sanctuary.dencapvision.workers.dev/\" -o /dev/null -w \"%{http_code}\")",
+      "Bash(curl -s \"https://the-facilitorium-sanctuary.dencapvision.workers.dev/\")",
+      "Bash(kill %1)",
+      "Bash(wait)",
+      "Bash(curl -s -I \"https://the-facilitorium-sanctuary.dencapvision.workers.dev/_next/static/chunks/webpack-abc123.js\")",
+      "Bash(curl -s \"https://the-facilitorium-sanctuary.dencapvision.workers.dev/robots.txt\")"
     ]
   }
 }

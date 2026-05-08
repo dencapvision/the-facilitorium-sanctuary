@@ -4,12 +4,21 @@ import React from 'react';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { MessageCircle, ShieldCheck, Key } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
 
 export default function LoginPage() {
-  const handleLineLogin = () => {
-    // This will be connected to Line Login (LIFF) in the next phase
-    console.log('LINE Login initiated');
-    alert('ระบบ LINE Login กำลังถูกเชื่อมต่อ... สำหรับการใช้งานจริงจะเปลี่ยนเส้นทางไปที่ LINE OA');
+  const handleLineLogin = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'custom:line' as any,
+      options: {
+        redirectTo: `${window.location.origin}/api/auth/callback`,
+      },
+    });
+
+    if (error) {
+      console.error('Error logging in with LINE:', error.message);
+      alert('เกิดข้อผิดพลาดในการเข้าสู่ระบบ: ' + error.message);
+    }
   };
 
   return (
