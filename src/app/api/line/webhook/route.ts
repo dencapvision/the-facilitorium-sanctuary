@@ -6,7 +6,8 @@ export const runtime = 'edge';
 export async function POST(req: NextRequest) {
   const channelSecret = process.env.LINE_CHANNEL_SECRET;
   if (!channelSecret) {
-    return NextResponse.json({ error: 'LINE not configured' }, { status: 500 });
+    // Not yet configured — acknowledge LINE's verify ping but do nothing
+    return NextResponse.json({ status: 'ok' });
   }
 
   const body = await req.text();
