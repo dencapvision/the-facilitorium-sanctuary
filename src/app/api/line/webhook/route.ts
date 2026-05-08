@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyLineSignature } from '@/lib/line';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(req: NextRequest) {
   const channelSecret = process.env.LINE_CHANNEL_SECRET;
   if (!channelSecret) {
